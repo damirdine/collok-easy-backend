@@ -10,8 +10,8 @@ const colocationValidation = {
     },
 
     async validateCreateColocation(req, res, next) {
-    const { name, admin_user_id } = req.body;
-
+    const { name } = req.body;
+    const admin_user_id = req.user.id;
     if (!name || typeof name !== 'string' || name.length < 3 || name.length > 50) {
         // A voir pour le nombre de caractère
         return res.status(400).json({ error: "Bad Request - Name is required and should be a string with length between 3 and 50 characters." });

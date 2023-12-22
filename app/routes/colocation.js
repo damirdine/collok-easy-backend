@@ -1,6 +1,7 @@
 import express from "express";
 import colocationController from "../controllers/colocationController.js";
 import colocationValidation from "../middleware/validations/colocation.js";
+
 const colocationRouter = express.Router();
 
 
@@ -157,7 +158,6 @@ export default colocationRouter;
  *         application/json:
  *           example:
  *             name: My Colocation
- *             admin_user_id: 3
  *     responses:
  *       201:
  *         description: Colocation created successfully

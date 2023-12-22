@@ -25,12 +25,11 @@ const colocationController = {
   },
 
   async createColocation(req, res) {
-    const { name, admin_user_id } = req.body;
-
+    const { name } = req.body; 
     try {
       const data = await models.colocation.create({
         name,
-        admin_user_id,
+        admin_user_id : req.user.id,
       });
       await data.reload();
       res.status(201).json({ data });
@@ -43,18 +42,23 @@ const colocationController = {
   async updateColocationName(req, res) {
     const { colocationID } = req.params;
     const { name } = req.body;
-
+    const idCurrentUser = req.user.id;
     try {
       const data = await models.colocation.findByPk(colocationID);
-
       if (data) {
-        await data.update({ name: name });
+        const idAdmin =  data.dataValues.admin_user_id;
+        if ( idAdmin === idCurrentUser) {
+          await data.update({ name: name });
         await data.reload();
         res.json({ data });
+        } else {
+          res.status(403).json({ error: "User not authorized"})
+        }
       } else {
         res.status(404).json({ error: "Colocation not found" });
       }
     } catch (error) {
+      console.error(error)
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
@@ -78,13 +82,19 @@ const colocationController = {
   async updateColocationAdmin(req, res) {
     const { colocationID } = req.params;
     const { newAdminID } = req.body;
-
+    const idCurrentUser = req.user.id;
     try {
       const data = await models.colocation.findByPk(colocationID);
+      
       if (data) {
-        await data.update({ admin_user_id: newAdminID });
-        await data.reload();
-        res.json({ data });
+        const idAdmin = data.colocation.dataValues.admin_user_id;
+          if (idAdmin === idCurrentUser) {
+            await data.update({ admin_user_id: newAdminID }, transaction);
+            await data.reload();
+            res.json({ data });
+          } else {
+            res.status(403).json({ error: "User not Authorized"})
+          }
       } else {
         res.status(404).json({ error: "Colocation not found" });
       }
@@ -96,24 +106,34 @@ const colocationController = {
   async addColocationMember(req, res) {
     const { colocationID } = req.params;
     const { user_id } = req.body;
+    const idCurrentUser = req.user.id;
 
     try {
       const data = await models.user.findByPk(user_id);
-
+      const colocation = await models.colocation.findByPk(colocationID);
       if (data) {
-        if (data.colocation_id !== colocationID) {
-          await data.update({
-            colocation_id: colocationID,
-          });
-          await data.reload();
-          res.json({ data });
-        } else {
-          res.json({ message: "User is already a member of the colocation." });
+        if (colocation) {
+          console.log(colocation)
+          const idAdmin = colocation.dataValues.admin_user_id;
+          if (idCurrentUser === idAdmin) {
+            if (data.dataValues.colocation_id !== colocationID) {
+              await data.update({
+                colocation_id: colocationID,
+              });
+              await data.reload();
+              res.json({ data });
+            } else {
+              res.json({ message: "User is already a member of the colocation." });
+            }
+          } else {
+            res.status(403).json({ error : " User not authorized "})
+          }
         }
       } else {
         res.status(404).json({ error: "User not found" });
       }
     } catch (error) {
+      console.error(error)
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
@@ -121,22 +141,32 @@ const colocationController = {
   async deleteColocationMember(req, res) {
     const { colocationID } = req.params;
     const { user_id } = req.body;
+    const idCurrentUser = req.user.id;
     try {
       const user = await models.user.findByPk(user_id);
       const userData = user.dataValues;
+      const colocation = await models.colocation.findByPk(colocationID);
+      
 
       if (userData) {
-        if (userData.colocation_id && userData.colocation_id == colocationID) {
-          await user.update({ colocation_id: null });
-          res.json({
-            data: {
-              message: "User removed from the colocation successfully.",
-            },
-          });
-        } else {
-          res
-            .status(404)
-            .json({ error: "User is not a member of the colocation." });
+        if (colocation) {
+          const idAdmin = colocation.dataValues.admin_user_id;
+          if (idCurrentUser === idAdmin) {
+            if (userData.colocation_id && userData.colocation_id == colocationID) {
+              await user.update({ colocation_id: null });
+              res.json({
+                data: {
+                  message: "User removed from the colocation successfully.",
+                },
+              });
+            } else {
+              res
+                .status(404)
+                .json({ error: "User is not a member of the colocation." });
+            }
+          }else {
+            res.status(403).json({ error : " User not authorized "})
+          }
         }
       } else {
         res.status(404).json({ error: "User not found" });

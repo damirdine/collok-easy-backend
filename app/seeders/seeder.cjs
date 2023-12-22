@@ -30,7 +30,7 @@ module.exports = {
         firstname: `User${i + 1}`,
         lastname: `Lastname${i + 1}`,
         email: `user${i + 1}@example.com`,
-        password: "password", // Devrait être haché dans une application réelle
+        password: "$argon2id$v=19$m=65536,t=3,p=4$ih7eguF5Fg+UqX/gdN1uOQ$tRwox7ZyAE5xwd2lB8RaZ9Wi0HwH6cC83VvZgyGiebM", // Devrait être haché dans une application réelle
         created_at: new Date(),
         updated_at: new Date(),
         colocation_id: (i % 2) + 1,
