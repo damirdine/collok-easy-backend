@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import models from "../models/index.js";
 import { JWT_EXPIRED_IN, JWT_SECRET_KEY } from "../helpers/constant.js";
 
-const authController = {
+const authController = (models) => ({
   async register(req, res) {
     try {
       const body = req.body;
@@ -70,6 +70,7 @@ const authController = {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
-};
+});
 
-export default authController;
+export default authController(models);
+export const auth = authController;

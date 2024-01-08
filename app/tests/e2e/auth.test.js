@@ -2,7 +2,6 @@ import request from "supertest";
 import server from "./utils";
 
 const API_BASE_URL = "/api/v1";
-server.listen(3001);
 
 let token;
 describe("Authentication (Registration/Login)", () => {
@@ -60,4 +59,3 @@ describe("User profile", () => {
       .expect(200);
   });
 });
-server.close();
