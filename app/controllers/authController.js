@@ -70,6 +70,33 @@ const authController = (models) => ({
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
+  async refreshAccessToken(req, res) {
+    try {
+      const oldToken = req.token; 
+      if (!oldToken) {
+        return res
+          .status(401)
+          .json({ error: "Unauthorized - Token not provided" });
+      }
+
+      jwt.verify(oldToken, JWT_SECRET_KEY, async (err, user) => {
+        if (err) {
+          return res.status(403).json({ error: "Forbidden - Invalid token" });
+        }
+
+        // Si la vérification est réussie, créez un nouveau token
+        const newToken = jwt.sign({ ...user }, JWT_SECRET_KEY, {
+          expiresIn: JWT_EXPIRED_IN,
+        });
+
+        // Envoyez le nouveau token en réponse
+        return res.json({ token: newToken });
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 });
 
 export default authController(models);
