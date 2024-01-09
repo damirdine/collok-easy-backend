@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 
 import models from "../models/index.js";
 import { JWT_EXPIRED_IN, JWT_SECRET_KEY } from "../helpers/constant.js";
+import { sendEmail } from "../helpers/email.js";
+import { render } from "../helpers/template.js";
 
 const authController = (models) => ({
   async register(req, res) {
@@ -70,7 +72,45 @@ const authController = (models) => ({
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
+  async forgotPassword(req, res) {
+    try {
+      const { email } = req.body;
+
+      const user = await models.user.findOne({
+        where: { email: email?.toLowerCase() },
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const token = jwt.sign({ email: user.email }, PASSWORD_RESET_SECRET_KEY, {
+        expiresIn: PASSWORD_RESET_EXPIRED_IN,
+      });
+
+      // Send the token to the user's email (implement email sending separately)
+      const infoEmail = await sendEmailForgetPassword(token, user);
+
+      return res.json({ message: "Password reset email sent successfully" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 });
 
 export default authController(models);
 export const auth = authController;
+
+async function sendEmailForgetPassword(token, user) {
+  const frontHost =
+    process.env.NODE_ENV === "production"
+      ? "https://collok-easy-back.onrender.com/"
+      : "http://localhost:3000/";
+  const htmlContent = await render("auth/mails/reset_password", {
+    firstname: user.firstname,
+    supportEmail: "support@collok-easy.com",
+    resetLink: frontHost + `auth/reset-password?token=${token}`,
+  });
+  return sendEmail(user.email, htmlContent);
+}

@@ -1,5 +1,5 @@
 import { createTransport } from "nodemailer";
-import { GMAIL_EMAIL, GMAIL_PASSWORD } from "./constant";
+import { GMAIL_EMAIL, GMAIL_PASSWORD } from "./constant.js";
 
 const transporter = createTransport({
   service: "gmail",
@@ -11,7 +11,7 @@ const transporter = createTransport({
 
 export function sendEmail(email, content) {
   return transporter.sendMail({
-    from: `"L'equipe support 📞" <${GMAIL_EMAIL}>`,
+    from: `"L'equipe support 💌" <support@collock-easy.com>`,
     to: email,
     subject: "Récupération de mot de passe",
     html: content,
