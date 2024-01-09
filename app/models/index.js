@@ -21,10 +21,8 @@ config.logging = process.env.SEQUELIZE_LOG === "false" ? false : console.log;
 
 let sequelize;
 
-if (env === "production") {
-  sequelize = new Sequelize(process.env.DATABASE_URL, config);
-  // login: config.logging,
-  // });
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
   sequelize = new Sequelize(
     config.database,
