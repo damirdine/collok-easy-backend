@@ -1,7 +1,7 @@
 import * as fs from "fs/promises";
 import path from "path";
 
-const viewsRootDirectory = path.join("app", "views");
+const viewsRootDirectory = path.join(path.resolve(), "views");
 
 export async function render(filePath, data) {
   let file = await fs.readFile(
@@ -10,7 +10,7 @@ export async function render(filePath, data) {
       encoding: "utf-8",
     }
   );
-
+  if (!data) return file;
   for (const [key, value] of Object.entries(data)) {
     const keyMatch = `{{${key}}}`;
     if (file.includes(keyMatch)) {

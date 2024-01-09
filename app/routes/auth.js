@@ -25,6 +25,12 @@ authRouter.post(
   authController.login
 );
 
+authRouter.post(
+  "/forget-password",
+  authValidator.forgetPassword,
+  handleValidationErrors,
+  authController.forgotPassword
+);
 export default authRouter;
 
 /**
@@ -92,4 +98,32 @@ export default authRouter;
  *           application/json:
  *             example:
  *               error: Invalid input data or registration failed
+ */
+
+/**
+ * @swagger
+ * /api/v1/auth/forget-password:
+ *   post:
+ *     summary: Forget password endpoint
+ *     description: Send forget password link to the user email.
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           example:
+ *             email: example@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *                message: Password reset email sent successfully
+ *       400:
+ *         description: Process failed
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: User not exist or Server Error
  */

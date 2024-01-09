@@ -97,6 +97,11 @@ const authController = (models) => ({
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
+  async resetPasswordHtml(req, res) {
+    const html = await render("auth/reset_password");
+    return res.send(html);
+  },
+  async resetPassword(req, res) {},
 });
 
 export default authController(models);

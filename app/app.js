@@ -8,6 +8,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger.js";
 
 import apiV1Router from "./routes/router.js";
+import webRouter from "./routes/router.web.js";
 
 const app = express();
 app.use(cors());
@@ -18,6 +19,7 @@ app.use(morgan("tiny"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1", apiV1Router);
+app.use("/", webRouter);
 
 if (process.env.NODE_ENV !== "test") {
   // Démarrage du serveur sur le port 3000
