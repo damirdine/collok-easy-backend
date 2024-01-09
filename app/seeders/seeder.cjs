@@ -19,7 +19,7 @@ module.exports = {
           updated_at: new Date(),
         },
       ],
-      { returning: true }
+      { returning: true, updateOnDuplicate: ["id"] }
     );
 
     // Créer des utilisateurs pour chaque colocation
@@ -30,14 +30,17 @@ module.exports = {
         firstname: `User${i + 1}`,
         lastname: `Lastname${i + 1}`,
         email: `user${i + 1}@example.com`,
-        password: "$argon2id$v=19$m=65536,t=3,p=4$ih7eguF5Fg+UqX/gdN1uOQ$tRwox7ZyAE5xwd2lB8RaZ9Wi0HwH6cC83VvZgyGiebM", // Devrait être haché dans une application réelle
+        password:
+          "$argon2id$v=19$m=65536,t=3,p=4$ih7eguF5Fg+UqX/gdN1uOQ$tRwox7ZyAE5xwd2lB8RaZ9Wi0HwH6cC83VvZgyGiebM", // Devrait être haché dans une application réelle
         created_at: new Date(),
         updated_at: new Date(),
         colocation_id: (i % 2) + 1,
       });
     }
 
-    await queryInterface.bulkInsert("user", users);
+    await queryInterface.bulkInsert("user", users, {
+      updateOnDuplicate: ["id"],
+    });
 
     // Mettre à jour le champ admin_user_id pour les colocations
     await queryInterface.bulkUpdate(
@@ -65,7 +68,9 @@ module.exports = {
       });
     }
 
-    await queryInterface.bulkInsert("objective", objectives);
+    await queryInterface.bulkInsert("objective", objectives, {
+      updateOnDuplicate: ["id"],
+    });
 
     // Insérer des données pour les tableaux 'outgoing' et 'task'
     const outgoings = [];
@@ -101,9 +106,15 @@ module.exports = {
       });
     }
 
-    await queryInterface.bulkInsert("outgoing", outgoings);
-    await queryInterface.bulkInsert("task", tasks);
-    await queryInterface.bulkInsert("user_objective", user_objectives);
+    await queryInterface.bulkInsert("outgoing", outgoings, {
+      updateOnDuplicate: ["id"],
+    });
+    await queryInterface.bulkInsert("task", tasks, {
+      updateOnDuplicate: ["id"],
+    });
+    await queryInterface.bulkInsert("user_objective", user_objectives, {
+      ignoreDuplicates: true,
+    });
   },
 
   down: async (queryInterface, Sequelize) => {

@@ -11,7 +11,7 @@
     "start:watch": "nodemon -L app.js",
     "docker:api": "docker exec -it api sh",
     "dev": "nodemon -L app.js",
-    "db:up": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
+    "db:up": "npx sequelize-cli db:migrate --debug && npx sequelize-cli db:seed:all --debug"
   },
   "author": "CollokEasy",
   "license": "MIT",
