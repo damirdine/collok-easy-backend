@@ -4,23 +4,30 @@ const colocationController = {
   async getColocations(req, res) {
     try {
       const data = await models.colocation.findAll();
-      res.json({ data });
+
+      if (data.length > 0) {
+        res.json({ data });
+      } else {
+        res.json({ message: "Aucune colocation trouvée." });
+      }
+
     } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Erreur interne du serveur" });
     }
   },
 
   async getColocationById(req, res) {
     const { colocationID } = req.params;
+          // TODO Rajouter vérification si l'utilisateur fait bien partie de la colcoation ?
     try {
       const data = await models.colocation.findByPk(colocationID);
       if (data) {
         res.json({ data });
       } else {
-        res.status(404).json({ error: "Colocation not found" });
+        res.status(404).json({ error: "Colocation non trouvée" });
       }
     } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Erreur interne du serveur" });
     }
   },
 
@@ -29,13 +36,13 @@ const colocationController = {
     try {
       const data = await models.colocation.create({
         name,
-        admin_user_id : req.user.id,
+        admin_user_id: req.user.id,
       });
       await data.reload();
       res.status(201).json({ data });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Erreur interne du serveur" });
     }
   },
 
@@ -47,19 +54,19 @@ const colocationController = {
       const data = await models.colocation.findByPk(colocationID);
       if (data) {
         const idAdmin =  data.dataValues.admin_user_id;
-        if ( idAdmin === idCurrentUser) {
+        if (idAdmin === idCurrentUser) {
           await data.update({ name: name });
-        await data.reload();
-        res.json({ data });
+          await data.reload();
+          res.json({ data });
         } else {
-          res.status(403).json({ error: "User not authorized"})
+          res.status(403).json({ error: "Utilisateur non autorisé" });
         }
       } else {
-        res.status(404).json({ error: "Colocation not found" });
+        res.status(404).json({ error: "Colocation non trouvée" });
       }
     } catch (error) {
       console.error(error)
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Erreur interne du serveur" });
     }
   },
 
@@ -72,10 +79,10 @@ const colocationController = {
       if (data) {
         res.json({ data });
       } else {
-        res.status(404).json({ error: "Colocation not found for admin user" });
+        res.status(404).json({ error: "Colocation non trouvée pour l'utilisateur admin" });
       }
     } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Erreur interne du serveur" });
     }
   },
 
@@ -88,18 +95,18 @@ const colocationController = {
       
       if (data) {
         const idAdmin = data.colocation.dataValues.admin_user_id;
-          if (idAdmin === idCurrentUser) {
-            await data.update({ admin_user_id: newAdminID }, transaction);
-            await data.reload();
-            res.json({ data });
-          } else {
-            res.status(403).json({ error: "User not Authorized"})
-          }
+        if (idAdmin === idCurrentUser) {
+          await data.update({ admin_user_id: newAdminID });
+          await data.reload();
+          res.json({ data });
+        } else {
+          res.status(403).json({ error: "Utilisateur non autorisé" });
+        }
       } else {
-        res.status(404).json({ error: "Colocation not found" });
+        res.status(404).json({ error: "Colocation non trouvée" });
       }
     } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Erreur interne du serveur" });
     }
   },
 
@@ -113,7 +120,6 @@ const colocationController = {
       const colocation = await models.colocation.findByPk(colocationID);
       if (data) {
         if (colocation) {
-          console.log(colocation)
           const idAdmin = colocation.dataValues.admin_user_id;
           if (idCurrentUser === idAdmin) {
             if (data.dataValues.colocation_id !== colocationID) {
@@ -123,18 +129,18 @@ const colocationController = {
               await data.reload();
               res.json({ data });
             } else {
-              res.json({ message: "User is already a member of the colocation." });
+              res.json({ message: "L'utilisateur est déjà membre de la colocation." });
             }
           } else {
-            res.status(403).json({ error : " User not authorized "})
+            res.status(403).json({ error : "Utilisateur non autorisé" });
           }
         }
       } else {
-        res.status(404).json({ error: "User not found" });
+        res.status(404).json({ error: "Utilisateur non trouvé" });
       }
     } catch (error) {
       console.error(error)
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Erreur interne du serveur" });
     }
   },
 
@@ -147,7 +153,6 @@ const colocationController = {
       const userData = user.dataValues;
       const colocation = await models.colocation.findByPk(colocationID);
       
-
       if (userData) {
         if (colocation) {
           const idAdmin = colocation.dataValues.admin_user_id;
@@ -156,25 +161,45 @@ const colocationController = {
               await user.update({ colocation_id: null });
               res.json({
                 data: {
-                  message: "User removed from the colocation successfully.",
+                  message: "Utilisateur retiré de la colocation avec succès.",
                 },
               });
             } else {
               res
                 .status(404)
-                .json({ error: "User is not a member of the colocation." });
+                .json({ error: "L'utilisateur n'est pas membre de la colocation." });
             }
-          }else {
-            res.status(403).json({ error : " User not authorized "})
+          } else {
+            res.status(403).json({ error : "Utilisateur non autorisé" });
           }
         }
       } else {
-        res.status(404).json({ error: "User not found" });
+        res.status(404).json({ error: "Utilisateur non trouvé" });
       }
     } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Erreur interne du serveur" });
     }
   },
+
+  async getColocationMembers(req, res) {
+    const { colocationID } = req.params;
+    try {
+        const colocation = await models.colocation.findByPk(colocationID, {
+            include: {
+                model: models.user,
+            },
+        });
+        if (colocation) {
+            const members = colocation.users;
+            res.json({ members });
+        } else {
+            res.status(404).json({ error: "Colocation non trouvée" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur interne du serveur" });
+    }
+},
 };
 
 export default colocationController;
