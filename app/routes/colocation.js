@@ -82,22 +82,27 @@ export default colocationRouter;
  *         content:
  *           application/json:
  *             example:
- *               data: [
- *                 {
- *                   "id": 1,
- *                   "createdAt": "2023-12-21T09:38:19.000Z",
- *                   "updatedAt": "2023-12-21T09:38:19.000Z",
- *                   "name": "Colocation 1",
- *                   "admin_user_id": 1
- *                 },
- *                 {
- *                   "id": 2,
- *                   "createdAt": "2023-12-21T09:38:19.000Z",
- *                   "updatedAt": "2023-12-21T09:38:19.000Z",
- *                   "name": "Colocation 2",
- *                   "admin_user_id": 6
- *                 }
- *               ]
+ *               data:
+ *                 - id: 1
+ *                   createdAt: "2023-12-21T09:38:19.000Z"
+ *                   updatedAt: "2023-12-21T09:38:19.000Z"
+ *                   name: "Colocation 1"
+ *                   admin_user_id: 1
+ *                   admin_user:
+ *                     id: 1
+ *                     firstname: "User1"
+ *                     lastname: "Lastname1"
+ *                     pseudo: "Pseudo1"
+ *                 - id: 2
+ *                   createdAt: "2023-12-21T09:38:19.000Z"
+ *                   updatedAt: "2023-12-21T09:38:19.000Z"
+ *                   name: "Colocation 2"
+ *                   admin_user_id: 6
+ *                   admin_user:
+ *                     id: 6
+ *                     firstname: "User6"
+ *                     lastname: "Lastname6"
+ *                     pseudo: "Pseudo6"
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -105,6 +110,8 @@ export default colocationRouter;
  *             example:
  *               error: Internal Server Error
  */
+
+
 
   /**
  * @swagger
