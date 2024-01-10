@@ -3,7 +3,10 @@ import outgoingsController from "../controllers/outgoingsController.js";
 
 const outgoingRouter = express.Router();
 
-outgoingRouter.get("/:colocationId/outgoings", outgoingsController.getOutgoingsByColocation);
+outgoingRouter.get(
+  "/:colocationId/outgoings",
+  outgoingsController.getOutgoingsByColocation
+);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/outgoings:
@@ -79,7 +82,10 @@ outgoingRouter.get("/:colocationId/outgoings", outgoingsController.getOutgoingsB
  *               error: "Erreur lors de la récupération des tâches."
  */
 
-outgoingRouter.get("/:colocationId/outgoings/:outgoingId", outgoingsController.getOutgoing);
+outgoingRouter.get(
+  "/:colocationId/outgoings/:outgoingId",
+  outgoingsController.getOutgoing
+);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/outgoings/{outgoingId}:
@@ -109,13 +115,13 @@ outgoingRouter.get("/:colocationId/outgoings/:outgoingId", outgoingsController.g
  *         content:
  *           application/json:
  *             example:
- *               data: 
+ *               data:
  *                 id: 7
  *                 createdAt: "2023-12-22T14:20:10.000Z"
  *                 updatedAt: "2023-12-22T14:20:10.000Z"
  *                 final_expense: 12003
  *                 objective_id: 20
- *                 objective: 
+ *                 objective:
  *                   name: "facture edf"
  *                   deadline: "2023-10-12T00:00:00.000Z"
  *                   created_by: 13
@@ -125,6 +131,7 @@ outgoingRouter.get("/:colocationId/outgoings/:outgoingId", outgoingsController.g
  *                       firstname: "User1"
  *                       lastname: "Lastname1"
  *                       avatar: null
+ *                 totalExpenseByUser: 2400.6
  *       404:
  *         description: Outgoing not found in this colocation
  *         content:
@@ -139,7 +146,10 @@ outgoingRouter.get("/:colocationId/outgoings/:outgoingId", outgoingsController.g
  *               error: "Erreur lors de la récupération de la tâche."
  */
 
-outgoingRouter.post("/:colocationId/outgoings/", outgoingsController.addOutgoing);
+outgoingRouter.post(
+  "/:colocationId/outgoings/",
+  outgoingsController.addOutgoing
+);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/outgoings:
@@ -205,7 +215,10 @@ outgoingRouter.post("/:colocationId/outgoings/", outgoingsController.addOutgoing
  *               error: "Erreur lors de la création de la tâche."
  */
 
-outgoingRouter.delete("/:colocationId/outgoings/:outgoingId", outgoingsController.deleteOutgoing);
+outgoingRouter.delete(
+  "/:colocationId/outgoings/:outgoingId",
+  outgoingsController.deleteOutgoing
+);
 
 /**
  * @swagger
@@ -257,7 +270,10 @@ outgoingRouter.delete("/:colocationId/outgoings/:outgoingId", outgoingsControlle
  *               error: "Erreur lors de la suppression de la tâche."
  */
 
-outgoingRouter.put("/:colocationId/outgoings/:outgoingId", outgoingsController.updateOutgoing);
+outgoingRouter.put(
+  "/:colocationId/outgoings/:outgoingId",
+  outgoingsController.updateOutgoing
+);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/outgoings/{outgoingId}:

@@ -2,7 +2,9 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET_KEY } from "./helpers/constant.js";
 
 const tokenToVerify =
+
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImNyZWF0ZWRBdCI6IjIwMjQtMDEtMDhUMTA6NDc6NTEuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDEtMDhUMTA6NDc6NTEuMDAwWiIsImZpcnN0bmFtZSI6IkVsZW5hIiwibGFzdG5hbWUiOiJEb2UiLCJlbWFpbCI6ImNvY29AZXhhbXBsZS5jb20iLCJiaXJ0aGRheSI6IjE5OTAtMDEtMDFUMDA6MDA6MDAuMDAwWiIsInBob25lIjoiMTIzNDU2Nzg5MCIsInBzZXVkbyI6ImpvaG5fZG9lIiwiZ2VuZGVyIjoibWFsZSIsImF2YXRhciI6Imh0dHBzOi8vZXhhbXBsZS5jb20vYXZhdGFyLmpwZyIsImNvbG9jYXRpb25faWQiOjEsImlhdCI6MTcwNDgxNjAyMCwiZXhwIjoxNzA1MDc1MjIwfQ.QZ5IrILaGiEV3k5lSMArIscFYxxNtwieT0HYemcvOTM";
+
 
 jwt.verify(tokenToVerify, JWT_SECRET_KEY, (err, decoded) => {
   if (err) {
