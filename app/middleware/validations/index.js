@@ -7,7 +7,7 @@ export default function handleValidationErrors(req, res, next) {
   }
   next();
 }
-export function handleUserCollocationAccess(req, res, next) {
+export function handleUserColocationAccess(req, res, next) {
   const colocationId = req.params.colocationId;
   const userId = req.user.colocation_id;
 
