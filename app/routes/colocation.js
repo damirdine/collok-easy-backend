@@ -51,6 +51,12 @@ colocationRouter.delete(
   colocationValidation.validateDeleteColocationMember,
   colocationController.deleteColocationMember
 );
+
+colocationRouter.get(
+  "/:colocationID/members",
+  colocationValidation.validateGetColocationMembers,
+  colocationController.getColocationMembers
+);
 export default colocationRouter;
 
 
@@ -429,6 +435,72 @@ export default colocationRouter;
  *           application/json:
  *             example:
  *               error: User is not a member of the colocation or User not found
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /api/v1/colocation/{colocationID}/members:
+ *   get:
+ *     summary: Get colocation members
+ *     description: Retrieve a list of members belonging to a specific colocation.
+ *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: colocationID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the colocation
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               members: [
+ *                 {
+ *                   "id": 1,
+ *                   "createdAt": "2023-12-21T09:38:19.000Z",
+ *                   "updatedAt": "2023-12-21T09:38:19.000Z",
+ *                   "firstname": "User1",
+ *                   "lastname": "Lastname1",
+ *                   "email": "user1@example.com",
+ *                   "birthday": null,
+ *                   "phone": null,
+ *                   "pseudo": null,
+ *                   "gender": null,
+ *                   "avatar": null,
+ *                   "colocation_id": "5"
+ *                 },
+ *                 {
+ *                   "id": 2,
+ *                   "createdAt": "2023-12-21T09:38:19.000Z",
+ *                   "updatedAt": "2023-12-21T09:38:19.000Z",
+ *                   "firstname": "User2",
+ *                   "lastname": "Lastname2",
+ *                   "email": "user2@example.com",
+ *                   "birthday": null,
+ *                   "phone": null,
+ *                   "pseudo": null,
+ *                   "gender": null,
+ *                   "avatar": null,
+ *                   "colocation_id": "5"
+ *                 }
+ *               ]
+ *       404:
+ *         description: Colocation not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Colocation not found
  *       500:
  *         description: Internal Server Error
  *         content:
