@@ -15,7 +15,6 @@ const colocationValidation = {
 
     validateCreateColocation: [
         check('name').isString().isLength({ min: 3, max: 50 }).withMessage('Le nom est requis et doit être une chaîne de caractères d\'une longueur entre 3 et 50 caractères.'),
-        check('admin_user_id').isInt().withMessage('ID de l\'admin devrait être un entier positif.'),
         (req, res, next) => {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
