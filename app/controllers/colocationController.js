@@ -3,18 +3,26 @@ import models from "../models/index.js";
 const colocationController = {
   async getColocations(req, res) {
     try {
-      const data = await models.colocation.findAll();
-
+      const data = await models.colocation.findAll({
+        include: [
+          {
+            model: models.user,
+            as: 'admin_user',
+            attributes: ['id', 'firstname', 'lastname', 'pseudo'],
+          },
+        ],
+      });
+  
       if (data.length > 0) {
         res.json({ data });
       } else {
         res.json({ message: "Aucune colocation trouvée." });
       }
-
+  
     } catch (error) {
       res.status(500).json({ error: "Erreur interne du serveur" });
     }
-  },
+  },  
 
   async getColocationById(req, res) {
     const { colocationID } = req.params;
