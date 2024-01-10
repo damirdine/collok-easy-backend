@@ -39,6 +39,7 @@ const outgoingsController = {
   async getOutgoing(req, res) {
     try {
       const { outgoingId, colocationId } = req.params;
+      const userId = req.user.id;
 
       const outgoingInstance = await db.outgoing.findOne({
         where: { id: outgoingId },
@@ -67,7 +68,24 @@ const outgoingsController = {
           .send({ error: "Dépense non trouvée dans cette colocation." });
       }
 
-      res.status(200).json({data:outgoingInstance});
+      // Vérifier si l'utilisateur connecté participe à la tâche
+      const isUserAssigned = outgoingInstance.objective.assigned_users.some(
+        (user) => user.id === userId
+      );
+
+      // Calculer la somme finale par utilisateur si l'utilisateur participe, sinon retourner le à zéro
+      const totalExpenseByUser = isUserAssigned
+        ? outgoingInstance.final_expense /
+          outgoingInstance.objective.assigned_users.length
+        : 0;
+
+      // Ajouter la somme finale par utilisateur à la réponse
+      const response = {
+        data: outgoingInstance,
+        totalExpenseByUser: totalExpenseByUser,
+      };
+
+      res.status(200).json(response);
     } catch (error) {
       console.log(error);
       res
@@ -75,6 +93,7 @@ const outgoingsController = {
         .send({ error: "Erreur lors de la récupération de la dépense." });
     }
   },
+
   async addOutgoing(req, res) {
     try {
       const colocationId = req.params.colocationId;
@@ -121,7 +140,7 @@ const outgoingsController = {
           name: newObjective.name,
           deadline: newObjective.deadline,
           is_completed: newObjective.is_completed,
-          assigned_users: usersInColocation.map((user) => user.id), 
+          assigned_users: usersInColocation.map((user) => user.id),
         },
       });
     } catch (error) {
