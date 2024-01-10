@@ -38,6 +38,8 @@ authRouter.post(
   authController.resetPassword
 );
 
+authRouter.post("/refresh-token", authController.refreshAccessToken);
+
 export default authRouter;
 
 /**
