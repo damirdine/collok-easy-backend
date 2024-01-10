@@ -25,6 +25,8 @@ authRouter.post(
   authController.login
 );
 
+authRouter.post("/refresh-token", authController.refreshAccessToken);
+
 export default authRouter;
 
 /**

@@ -1,9 +1,16 @@
 import express from "express";
 import tasksController from "../controllers/tasksController.js";
+import taskValidator from "../middleware/validations/task.js";
+import handleValidationErrors from "../middleware/validations/index.js";
 
 const taskRouter = express.Router();
 
-taskRouter.get("/:colocationId/tasks", tasksController.getTasksByColocation);
+taskRouter.get(
+  "/:colocationId/tasks",
+  taskValidator.getTasksByColocation,
+  handleValidationErrors,
+  tasksController.getTasksByColocation
+);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/tasks:
@@ -79,7 +86,12 @@ taskRouter.get("/:colocationId/tasks", tasksController.getTasksByColocation);
  *               error: "Erreur lors de la récupération des tâches."
  */
 
-taskRouter.get("/:colocationId/tasks/:taskId", tasksController.getTask);
+taskRouter.get(
+  "/:colocationId/tasks/:taskId",
+  taskValidator.getTask,
+  handleValidationErrors,
+  tasksController.getTask
+);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/tasks/{taskId}:
@@ -108,7 +120,7 @@ taskRouter.get("/:colocationId/tasks/:taskId", tasksController.getTask);
  *         description: Detailed information about the task
  *         content:
  *           application/json:
-*             example: 
+ *             example:
  *               data: {
  *                 "id": 2,
  *                 "createdAt": "2023-12-22T13:51:50.000Z",
@@ -150,7 +162,12 @@ taskRouter.get("/:colocationId/tasks/:taskId", tasksController.getTask);
  *               error: "Erreur lors de la récupération de la tâche."
  */
 
-taskRouter.post("/:colocationId/tasks/", tasksController.addTask);
+taskRouter.post(
+  "/:colocationId/tasks/",
+  taskValidator.addTask,
+  handleValidationErrors,
+  tasksController.addTask
+);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/tasks:
@@ -216,7 +233,12 @@ taskRouter.post("/:colocationId/tasks/", tasksController.addTask);
  *               error: "Erreur lors de la création de la tâche."
  */
 
-taskRouter.delete("/:colocationId/tasks/:taskId", tasksController.deleteTask);
+taskRouter.delete(
+  "/:colocationId/tasks/:taskId",
+  taskValidator.deleteTask,
+  handleValidationErrors,
+  tasksController.deleteTask
+);
 
 /**
  * @swagger
@@ -268,7 +290,12 @@ taskRouter.delete("/:colocationId/tasks/:taskId", tasksController.deleteTask);
  *               error: "Erreur lors de la suppression de la tâche."
  */
 
-taskRouter.put("/:colocationId/tasks/:taskId", tasksController.updateTask);
+taskRouter.put(
+  "/:colocationId/tasks/:taskId",
+  taskValidator.updateTask,
+  handleValidationErrors,
+  tasksController.updateTask
+);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/tasks/{taskId}:
@@ -348,6 +375,8 @@ taskRouter.put("/:colocationId/tasks/:taskId", tasksController.updateTask);
 
 taskRouter.post(
   "/:colocationId/tasks/:taskId/assign-user",
+  taskValidator.assignUserToTask,
+  handleValidationErrors,
   tasksController.assignUserToTask
 );
 /**
@@ -406,6 +435,8 @@ taskRouter.post(
 
 taskRouter.delete(
   "/:colocationId/tasks/:taskId/assign-user",
+  taskValidator.removeUserFromTask,
+  handleValidationErrors,
   tasksController.removeUserFromTask
 );
 /**
