@@ -1,6 +1,6 @@
 import express from "express";
 import colocationController from "../controllers/colocationController.js";
-import colocationValidation from "../middleware/validations/colocation.js";
+import colocationValidation from "../middleware/validations/colocation_new.js";
 
 const colocationRouter = express.Router();
 
