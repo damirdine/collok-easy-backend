@@ -84,14 +84,17 @@ const authController = (models) => ({
         return res.status(404).json({ error: "User not found" });
       }
 
-      const token = jwt.sign({ email: user.email }, PASSWORD_RESET_SECRET_KEY, {
-        expiresIn: PASSWORD_RESET_EXPIRED_IN,
+      const token = jwt.sign({ email: user.email }, JWT_SECRET_KEY, {
+        expiresIn: "2h",
       });
 
       // Send the token to the user's email (implement email sending separately)
       const infoEmail = await sendEmailForgetPassword(token, user);
 
-      return res.json({ message: "Password reset email sent successfully" });
+      return res.json({
+        message: "Password reset email sent successfully",
+        token,
+      });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Internal Server Error" });
@@ -101,7 +104,26 @@ const authController = (models) => ({
     const html = await render("auth/reset_password");
     return res.send(html);
   },
-  async resetPassword(req, res) {},
+  async resetPassword(req, res) {
+    try {
+      const decodedToken = jwt.verify(req.body?.token, JWT_SECRET_KEY);
+
+      const user = await models.user.findOne({
+        where: { email: decodedToken?.email?.toLowerCase() },
+      });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const hashedPassword = await argon2.hash(req.body?.password);
+      await user.update({ password: hashedPassword });
+
+      return res.json({ message: "Password change successfully" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 });
 
 export default authController(models);

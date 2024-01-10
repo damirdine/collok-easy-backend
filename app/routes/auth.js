@@ -31,6 +31,13 @@ authRouter.post(
   handleValidationErrors,
   authController.forgotPassword
 );
+
+authRouter.post(
+  "/reset-password",
+  authValidator.resetPassword,
+  authController.resetPassword
+);
+
 export default authRouter;
 
 /**
@@ -115,11 +122,42 @@ export default authRouter;
  *             email: example@example.com
  *     responses:
  *       200:
- *         description: Successful response
+ *         description: Successful response ! jwt available for max 4h
  *         content:
  *           application/json:
  *             example:
  *                message: Password reset email sent successfully
+ *                token: <reset_password_jwt_token>
+ *       400:
+ *         description: Process failed
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: User not exist or Server Error
+ */
+
+/**
+ * @swagger
+ * /api/v1/auth/reset-password:
+ *   post:
+ *     summary: Confirm reset password endpoint
+ *     description: Send Confirm reset password endpoint.
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           example:
+ *             token: <reset_password_jwt_token>
+ *             password: password
+ *             confirmPassword: password
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *                message: Password change successfully
  *       400:
  *         description: Process failed
  *         content:
