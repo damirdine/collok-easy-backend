@@ -36,6 +36,17 @@ const colocationValidation = {
         }
     ],
 
+    validateDeleteColocation: [
+        check('colocationID').isInt().withMessage('ID de la colocation non valide. Il devrait être un entier positif.'),
+        (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+            next();
+        }
+    ],
+
     validateGetColocationAdmin: [
         check('colocationID').isInt().withMessage('ID de la colocation non valide. Il devrait être un entier positif.'),
         (req, res, next) => {

@@ -26,7 +26,7 @@ const colocationController = {
 
   async getColocationById(req, res) {
     const { colocationID } = req.params;
-          // TODO Rajouter vérification si l'utilisateur fait bien partie de la colcoation ?
+          // Rajouter vérification si l'utilisateur fait bien partie de la colcoation ?
     try {
       const data = await models.colocation.findByPk(colocationID);
       if (data) {
@@ -77,6 +77,39 @@ const colocationController = {
       res.status(500).json({ error: "Erreur interne du serveur" });
     }
   },
+
+  async deleteColocation(req, res) {
+    const { colocationID } = req.params;
+    const idCurrentUser = req.user.id;
+  
+    try {
+      const colocation = await models.colocation.findByPk(colocationID);
+  
+      if (colocation) {
+        const idAdmin = colocation.dataValues.admin_user_id;
+  
+        if (idCurrentUser === idAdmin) {
+          await models.colocation.destroy({
+            where: { id: colocationID },
+          });
+  
+          res.json({
+            data: {
+              message: "Colocation deleted successfully.",
+            },
+          });
+        } else {
+          res.status(403).json({ error: "Utilisateur non autorisé" });
+        }
+      } else {
+        res.status(404).json({ error: "Colocation non trouvée" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Erreur interne du serveur" });
+    }
+  },
+  
 
   async getColocationAdmin(req, res) {
     const { colocationID } = req.params;
@@ -161,6 +194,9 @@ const colocationController = {
       const userData = user.dataValues;
       const colocation = await models.colocation.findByPk(colocationID);
       
+      // Faire une vérification s'il y a encore des users dans la coloc ?
+
+
       if (userData) {
         if (colocation) {
           const idAdmin = colocation.dataValues.admin_user_id;
