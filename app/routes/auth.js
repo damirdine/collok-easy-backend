@@ -71,12 +71,12 @@ export default authRouter;
  *             example:
  *                message: Registration successful
  *                token: <generated_access_token>
- *       400:
- *         description: Registration failed
+ *       422:
+ *         description: User email already exists
  *         content:
  *           application/json:
  *             example:
- *               error: Invalid input data or registration failed
+ *               error: User email already exists
  */
 
 /**

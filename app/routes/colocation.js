@@ -1,6 +1,7 @@
 import express from "express";
 import colocationController from "../controllers/colocationController.js";
 import colocationValidation from "../middleware/validations/colocation_new.js";
+import { handleUserCollocationAccess } from "../middleware/validations/index.js";
 
 const colocationRouter = express.Router();
 
@@ -13,6 +14,7 @@ colocationRouter.get(
 colocationRouter.get(
   "/:colocationID",
   colocationValidation.validateGetColocationById,
+  handleUserCollocationAccess,
   colocationController.getColocationById
   );
 
@@ -148,6 +150,12 @@ export default colocationRouter;
  *                 "name": "My Colocation bis encore plus",
  *                 "admin_user_id": 8
  *               }
+ *       403:
+ *         description: Accès refusé à cette colocation.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Accès refusé à cette colocation.
  *       404:
  *         description: Colocation non trouvée
  *         content:
@@ -287,7 +295,6 @@ export default colocationRouter;
  *         content:
  *           application/json:
  *             example:
- *               data:
  *                 message: Colocation deleted successfully.
  *       403:
  *         description: Utilisateur non autorisé
@@ -395,6 +402,12 @@ export default colocationRouter;
  *                 "name": "My Colocation bis encore plus",
  *                 "admin_user_id": 8
  *               }
+ *       403:
+ *         description: Utilisateur non autorisé
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Utilisateur non autorisé
  *       404:
  *         description: Colocation non trouvée
  *         content:
@@ -453,6 +466,12 @@ export default colocationRouter;
  *                 "avatar": null,
  *                 "colocation_id": "5"
  *               }
+ *       403:
+ *         description: Utilisateur non autorisé
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Utilisateur non autorisé
  *       404:
  *         description: Utilisateur non trouvé
  *         content:
@@ -492,12 +511,17 @@ export default colocationRouter;
  *             user_id: 3
  *     responses:
  *       200:
- *         description: Successful response
+ *         description: Utilisateur retiré de la colocation avec succès.
  *         content:
  *           application/json:
  *             example:
- *               data:
- *                 message: Member removed from the colocation successfully
+ *                 message: Utilisateur retiré de la colocation avec succès.
+ *       403:
+ *         description: Utilisateur non autorisé
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Utilisateur non autorisé
  *       404:
  *         description: L'utilisateur n'est pas membre de la colocation ou Utilisateur non trouvé
  *         content:
@@ -534,7 +558,7 @@ export default colocationRouter;
  *         content:
  *           application/json:
  *             example:
- *               members: [
+ *               data: [
  *                 {
  *                   "id": 1,
  *                   "createdAt": "2023-12-21T09:38:19.000Z",

@@ -17,7 +17,7 @@ const authController = (models) => ({
       });
 
       if (foundUser) {
-        return res.status(400).json({ error: "User email already exists" });
+        return res.status(422).json({ error: "User email already exists" });
       }
 
       // Hash the password
