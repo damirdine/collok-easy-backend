@@ -2,6 +2,8 @@ import { check } from "express-validator";
 import handleValidationErrors from "./index.js";
 import { translate } from "../../helpers/translate.js";
 
+const contents = translate();
+
 const isStrongPassword = (value) => {
   // au moins une majuscule, un chiffre et un caractère spécial
   const strongPasswordRegex =
@@ -12,7 +14,7 @@ const isStrongPassword = (value) => {
 const checkPassword = check("password").custom((value) => {
   if (process.env.NODE_ENV === "test") return true;
   if (!isStrongPassword(value)) {
-    throw new Error(translate("errors.password_no_valid"));
+    throw new Error(contents.errors.password_no_valid);
   }
   return true;
 });
@@ -26,7 +28,7 @@ const authValidator = {
     checkPassword,
     check("confirmPassword").custom((value, { req }) => {
       if (value !== req.body.password) {
-        throw new Error(translate("error.password_not_match"));
+        throw new Error(contents.errors.password_not_match);
       }
       return true;
     }),

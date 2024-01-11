@@ -7,8 +7,10 @@ const translation = {
       user_not_found: "User not found.",
       password_no_valid:
         "Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.",
-      colocation_access_denied: "Accès refusé à cette colocation.",
+      password_no_match: "Passwords do not match.",
+      colocation_access_denied: "Access denied to this colocation.",
       internal_server: "Internal Server Error",
+      invalid_credentials: "Invalid credentials",
     },
     msg: {
       success_login: "User login succesfuly.",
@@ -20,12 +22,17 @@ const translation = {
       user_not_found: "Utilisateur non trouvée.",
       password_no_valid:
         "Le mot de passe doit comporter au moins 8 caractères et inclure au moins une lettre majuscule, un chiffre et un caractère spécial.",
-      colocation_access_denied: "Access denied to this colocation.",
+      password_no_match: "Les mots de passe ne correspondent pas.",
+      colocation_access_denied: "Accès refusé à cette colocation.",
       internal_server: "Erreur interne du serveur",
+      invalid_credentials: "Unauthorized - Invalid credentials",
+      invalid_credentials_401: "Unauthorized - Invalid credentials",
+      invalid_credentials_403: "Forbidden - Invalid Refresh Token",
     },
     msg: {
       success_login: "Utilisateur connnecté avec succés.",
       success_register: "Inscription réussie",
+      success_password_reset: "Password change successfully",
     },
   },
 };
@@ -36,11 +43,16 @@ const translation = {
  * @property {Object} errors - Error messages.
  * @property {string} errors.user_not_found - Message for user not found error. (French: "Utilisateur non trouvée.")
  * @property {string} errors.password_no_valid - Message for invalid password error. (French: "Le mot de passe doit comporter au moins 8 caractères et inclure au moins une lettre majuscule, un chiffre et un caractère spécial.")
+ * @property {string} errors.password_not_match - Message for invalid password error. (French: "Le mot de passe doit comporter au moins 8 caractères et inclure au moins une lettre majuscule, un chiffre et un caractère spécial.")
  * @property {string} errors.colocation_access_denied - Message for colocation access denied error. (French: "Access denied to this colocation.")
  * @property {string} errors.internal_server - Message for internal server error. (French: "Erreur interne du serveur.")
+ * @property {string} errors.invalid_credentials - Message for internal server error. (French: "Erreur interne du serveur.")
+ * @property {string} errors.invalid_credentials_401 - Message for internal server error. (French: "Erreur interne du serveur.")
+ * @property {string} errors.invalid_credentials_403 - Message for internal server error. (French: "Erreur interne du serveur.")
  * @property {Object} msg - Success messages.
  * @property {string} msg.success_login - Message for successful login. (French: "Utilisateur connecté avec succès.")
- * @property {string} msg.success_register - Message for successful login. (French: "Utilisateur connecté avec succès.")
+ * @property {string} msg.success_register - Message for successful registration. (French: "Utilisateur connecté avec succès.")
+ * @property {string} msg.success_password_reset: "Password change successfully",
  */
 
 /**
