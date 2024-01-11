@@ -397,12 +397,18 @@ outgoingRouter.post(
  *           application/json:
  *             example:
  *               message: "Utilisateur assigné à la dépense avec succès."
- *       403:
+ *       404:
  *         description: Outgoing not found or user does not belong to the colocation
  *         content:
  *           application/json:
  *             example:
- *               error: "Dépense non trouvée ou ne fait pas partie de cette colocation."
+ *               error: "Dépense ou utilisateur non trouvée ou ne fait pas partie de cette colocation."
+ *       422:
+ *         description: Outgoing assigned to the colocation
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Utilisateur déjà assigné à la dépense."
  *       500:
  *         description: Server error
  *         content:

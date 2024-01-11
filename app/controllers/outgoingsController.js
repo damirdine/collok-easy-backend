@@ -273,10 +273,15 @@ const outgoingsController = {
             model: db.objective,
             as: "objective",
             where: { colocation_id: colocationId },
+            include: [
+              {
+                model: db.user,
+                as: "assigned_users",
+              },
+            ],
           },
         ],
       });
-      console.log("id dépense", outgoing);
 
       const user = await db.user.findOne({
         where: { id: userId, colocation_id: colocationId },
@@ -286,6 +291,14 @@ const outgoingsController = {
           error:
             "Dépense ou utilisateur non trouvé ou ne fait pas partie de cette colocation.",
         });
+      }
+      const isUserAssigned = outgoing.objective.assigned_users.some(
+        (user) => user.id === userId
+      );
+      if (isUserAssigned) {
+        return res
+          .status(422)
+          .send({ error: "Utilisateur déjà assigné à la dépense." });
       }
 
       await outgoing.objective.addAssigned_users(user);
