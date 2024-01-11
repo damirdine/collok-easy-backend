@@ -110,11 +110,11 @@ export default colocationRouter;
  *                     lastname: "Lastname6"
  *                     pseudo: "Pseudo6"
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
 
@@ -149,17 +149,17 @@ export default colocationRouter;
  *                 "admin_user_id": 8
  *               }
  *       404:
- *         description: Colocation not found
+ *         description: Colocation non trouvée
  *         content:
  *           application/json:
  *             example:
- *               error: Colocation not found
+ *               error: Colocation non trouvée
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
   /**
@@ -196,12 +196,18 @@ export default colocationRouter;
  *           application/json:
  *             example:
  *               error: Bad Request - Name and admin_user_id are required.
- *       500:
- *         description: Internal Server Error
+ *       422:
+ *         description: Le nom de la colocation doit être unique.
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Le nom de la colocation doit être unique.
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Erreur interne du serveur
  */
 
   /**
@@ -239,18 +245,24 @@ export default colocationRouter;
  *                 "name": "New Colocation Name",
  *                 "admin_user_id": 8
  *               }
+ *       403:
+ *         description: Utilisateur non autorisé
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Utilisateur non autorisé
  *       404:
- *         description: Colocation not found
+ *         description: Colocation non trouvée
  *         content:
  *           application/json:
  *             example:
- *               error: Colocation not found
+ *               error: Colocation non trouvée
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
   /**
@@ -278,23 +290,23 @@ export default colocationRouter;
  *               data:
  *                 message: Colocation deleted successfully.
  *       403:
- *         description: User not authorized to delete the colocation
+ *         description: Utilisateur non autorisé
  *         content:
  *           application/json:
  *             example:
- *               error: User not authorized to delete the colocation
+ *               error: Utilisateur non autorisé
  *       404:
- *         description: Colocation not found
+ *         description: Colocation non trouvée
  *         content:
  *           application/json:
  *             example:
- *               error: Colocation not found
+ *               error: Colocation non trouvée
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
 /**
@@ -334,17 +346,17 @@ export default colocationRouter;
  *                 avatar: null
  *                 colocation_id: null
  *       404:
- *         description: Colocation not found for admin user
+ *         description: Colocation non trouvée pour l'utilisateur admin
  *         content:
  *           application/json:
  *             example:
- *               error: Colocation not found for admin user
+ *               error: Colocation non trouvée pour l'utilisateur admin
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
 
@@ -384,17 +396,17 @@ export default colocationRouter;
  *                 "admin_user_id": 8
  *               }
  *       404:
- *         description: Colocation not found
+ *         description: Colocation non trouvée
  *         content:
  *           application/json:
  *             example:
- *               error: Colocation not found
+ *               error: Colocation non trouvée
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
 
@@ -442,17 +454,17 @@ export default colocationRouter;
  *                 "colocation_id": "5"
  *               }
  *       404:
- *         description: User not found
+ *         description: Utilisateur non trouvé
  *         content:
  *           application/json:
  *             example:
- *               error: User not found
+ *               error: Utilisateur non trouvé
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
 
@@ -487,17 +499,17 @@ export default colocationRouter;
  *               data:
  *                 message: Member removed from the colocation successfully
  *       404:
- *         description: User is not a member of the colocation or User not found
+ *         description: L'utilisateur n'est pas membre de la colocation ou Utilisateur non trouvé
  *         content:
  *           application/json:
  *             example:
- *               error: User is not a member of the colocation or User not found
+ *               error: L'utilisateur n'est pas membre de la colocation ou Utilisateur non trouvé
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
 /**
@@ -553,16 +565,16 @@ export default colocationRouter;
  *                 }
  *               ]
  *       404:
- *         description: Colocation not found
+ *         description: Colocation non trouvée
  *         content:
  *           application/json:
  *             example:
- *               error: Colocation not found
+ *               error: Colocation non trouvée
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
