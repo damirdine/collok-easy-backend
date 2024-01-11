@@ -13,6 +13,14 @@ const tasksController = {
             model: objective,
             where: { colocation_id: colocationId },
             required: true,
+            include: [
+              {
+                model: db.user,
+                as: "assigned_users",
+                through: { attributes: [] },
+                attributes: ["id", "firstname", "lastname", "avatar"],
+              },
+            ],
           },
         ],
       });

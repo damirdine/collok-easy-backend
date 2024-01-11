@@ -7,3 +7,12 @@ export default function handleValidationErrors(req, res, next) {
   }
   next();
 }
+export function handleUserColocationAccess(req, res, next) {
+  const colocationId = req.params.colocationId;
+  const userId = req.user.colocation_id;
+
+  if (colocationId !== userId) {
+    return res.status(422).json({ error: "Accès refusé à cette colocation." });
+  }
+  next();
+}

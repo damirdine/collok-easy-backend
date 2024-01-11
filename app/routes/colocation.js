@@ -28,6 +28,12 @@ colocationRouter.put(
     colocationController.updateColocationName
   );
 
+colocationRouter.delete(
+  "/:colocationID",
+  colocationValidation.validateDeleteColocation,
+  colocationController.deleteColocation
+  );
+
 colocationRouter.get(
   "/:colocationID/admin/",
   colocationValidation.validateGetColocationAdmin,
@@ -50,6 +56,12 @@ colocationRouter.delete(
   "/:colocationID/members/",
   colocationValidation.validateDeleteColocationMember,
   colocationController.deleteColocationMember
+);
+
+colocationRouter.get(
+  "/:colocationID/members",
+  colocationValidation.validateGetColocationMembers,
+  colocationController.getColocationMembers
 );
 export default colocationRouter;
 
@@ -76,29 +88,36 @@ export default colocationRouter;
  *         content:
  *           application/json:
  *             example:
- *               data: [
- *                 {
- *                   "id": 1,
- *                   "createdAt": "2023-12-21T09:38:19.000Z",
- *                   "updatedAt": "2023-12-21T09:38:19.000Z",
- *                   "name": "Colocation 1",
- *                   "admin_user_id": 1
- *                 },
- *                 {
- *                   "id": 2,
- *                   "createdAt": "2023-12-21T09:38:19.000Z",
- *                   "updatedAt": "2023-12-21T09:38:19.000Z",
- *                   "name": "Colocation 2",
- *                   "admin_user_id": 6
- *                 }
- *               ]
+ *               data:
+ *                 - id: 1
+ *                   createdAt: "2023-12-21T09:38:19.000Z"
+ *                   updatedAt: "2023-12-21T09:38:19.000Z"
+ *                   name: "Colocation 1"
+ *                   admin_user_id: 1
+ *                   admin_user:
+ *                     id: 1
+ *                     firstname: "User1"
+ *                     lastname: "Lastname1"
+ *                     pseudo: "Pseudo1"
+ *                 - id: 2
+ *                   createdAt: "2023-12-21T09:38:19.000Z"
+ *                   updatedAt: "2023-12-21T09:38:19.000Z"
+ *                   name: "Colocation 2"
+ *                   admin_user_id: 6
+ *                   admin_user:
+ *                     id: 6
+ *                     firstname: "User6"
+ *                     lastname: "Lastname6"
+ *                     pseudo: "Pseudo6"
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
+
+
 
   /**
  * @swagger
@@ -130,17 +149,17 @@ export default colocationRouter;
  *                 "admin_user_id": 8
  *               }
  *       404:
- *         description: Colocation not found
+ *         description: Colocation non trouvée
  *         content:
  *           application/json:
  *             example:
- *               error: Colocation not found
+ *               error: Colocation non trouvée
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
   /**
@@ -177,12 +196,18 @@ export default colocationRouter;
  *           application/json:
  *             example:
  *               error: Bad Request - Name and admin_user_id are required.
- *       500:
- *         description: Internal Server Error
+ *       422:
+ *         description: Le nom de la colocation doit être unique.
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Le nom de la colocation doit être unique.
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Erreur interne du serveur
  */
 
   /**
@@ -220,18 +245,68 @@ export default colocationRouter;
  *                 "name": "New Colocation Name",
  *                 "admin_user_id": 8
  *               }
+ *       403:
+ *         description: Utilisateur non autorisé
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Utilisateur non autorisé
  *       404:
- *         description: Colocation not found
+ *         description: Colocation non trouvée
  *         content:
  *           application/json:
  *             example:
- *               error: Colocation not found
+ *               error: Colocation non trouvée
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
+ */
+
+  /**
+ * @swagger
+ * /api/v1/colocation/{colocationID}:
+ *   delete:
+ *     summary: Delete colocation
+ *     description: Delete a specific colocation by its ID.
+ *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: colocationID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the colocation
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               data:
+ *                 message: Colocation deleted successfully.
+ *       403:
+ *         description: Utilisateur non autorisé
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Utilisateur non autorisé
+ *       404:
+ *         description: Colocation non trouvée
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Colocation non trouvée
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Erreur interne du serveur
  */
 
 /**
@@ -271,17 +346,17 @@ export default colocationRouter;
  *                 avatar: null
  *                 colocation_id: null
  *       404:
- *         description: Colocation not found for admin user
+ *         description: Colocation non trouvée pour l'utilisateur admin
  *         content:
  *           application/json:
  *             example:
- *               error: Colocation not found for admin user
+ *               error: Colocation non trouvée pour l'utilisateur admin
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
 
@@ -321,17 +396,17 @@ export default colocationRouter;
  *                 "admin_user_id": 8
  *               }
  *       404:
- *         description: Colocation not found
+ *         description: Colocation non trouvée
  *         content:
  *           application/json:
  *             example:
- *               error: Colocation not found
+ *               error: Colocation non trouvée
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
 
@@ -379,17 +454,17 @@ export default colocationRouter;
  *                 "colocation_id": "5"
  *               }
  *       404:
- *         description: User not found
+ *         description: Utilisateur non trouvé
  *         content:
  *           application/json:
  *             example:
- *               error: User not found
+ *               error: Utilisateur non trouvé
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
  */
 
 
@@ -424,16 +499,82 @@ export default colocationRouter;
  *               data:
  *                 message: Member removed from the colocation successfully
  *       404:
- *         description: User is not a member of the colocation or User not found
+ *         description: L'utilisateur n'est pas membre de la colocation ou Utilisateur non trouvé
  *         content:
  *           application/json:
  *             example:
- *               error: User is not a member of the colocation or User not found
+ *               error: L'utilisateur n'est pas membre de la colocation ou Utilisateur non trouvé
  *       500:
- *         description: Internal Server Error
+ *         description: Erreur interne du serveur
  *         content:
  *           application/json:
  *             example:
- *               error: Internal Server Error
+ *               error: Erreur interne du serveur
+ */
+
+/**
+ * @swagger
+ * /api/v1/colocation/{colocationID}/members:
+ *   get:
+ *     summary: Get colocation members
+ *     description: Retrieve a list of members belonging to a specific colocation.
+ *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: colocationID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the colocation
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               members: [
+ *                 {
+ *                   "id": 1,
+ *                   "createdAt": "2023-12-21T09:38:19.000Z",
+ *                   "updatedAt": "2023-12-21T09:38:19.000Z",
+ *                   "firstname": "User1",
+ *                   "lastname": "Lastname1",
+ *                   "email": "user1@example.com",
+ *                   "birthday": null,
+ *                   "phone": null,
+ *                   "pseudo": null,
+ *                   "gender": null,
+ *                   "avatar": null,
+ *                   "colocation_id": "5"
+ *                 },
+ *                 {
+ *                   "id": 2,
+ *                   "createdAt": "2023-12-21T09:38:19.000Z",
+ *                   "updatedAt": "2023-12-21T09:38:19.000Z",
+ *                   "firstname": "User2",
+ *                   "lastname": "Lastname2",
+ *                   "email": "user2@example.com",
+ *                   "birthday": null,
+ *                   "phone": null,
+ *                   "pseudo": null,
+ *                   "gender": null,
+ *                   "avatar": null,
+ *                   "colocation_id": "5"
+ *                 }
+ *               ]
+ *       404:
+ *         description: Colocation non trouvée
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Colocation non trouvée
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Erreur interne du serveur
  */
 

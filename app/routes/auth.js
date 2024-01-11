@@ -25,6 +25,19 @@ authRouter.post(
   authController.login
 );
 
+authRouter.post(
+  "/forget-password",
+  authValidator.forgetPassword,
+  handleValidationErrors,
+  authController.forgotPassword
+);
+
+authRouter.post(
+  "/reset-password",
+  authValidator.resetPassword,
+  authController.resetPassword
+);
+
 authRouter.post("/refresh-token", authController.refreshAccessToken);
 
 export default authRouter;
@@ -94,4 +107,63 @@ export default authRouter;
  *           application/json:
  *             example:
  *               error: Invalid input data or registration failed
+ */
+
+/**
+ * @swagger
+ * /api/v1/auth/forget-password:
+ *   post:
+ *     summary: Forget password endpoint
+ *     description: Send forget password link to the user email.
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           example:
+ *             email: example@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response ! jwt available for max 4h
+ *         content:
+ *           application/json:
+ *             example:
+ *                message: Password reset email sent successfully
+ *                token: <reset_password_jwt_token>
+ *       400:
+ *         description: Process failed
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: User not exist or Server Error
+ */
+
+/**
+ * @swagger
+ * /api/v1/auth/reset-password:
+ *   post:
+ *     summary: Confirm reset password endpoint
+ *     description: Send Confirm reset password endpoint.
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           example:
+ *             token: <reset_password_jwt_token>
+ *             password: password
+ *             confirmPassword: password
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *                message: Password change successfully
+ *       400:
+ *         description: Process failed
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: User not exist or Server Error
  */

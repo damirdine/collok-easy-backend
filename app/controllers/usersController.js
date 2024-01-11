@@ -13,15 +13,27 @@ const userController = {
   async editProfile(req, res) {
     try {
       const userId = req?.user?.id; // Assuming you have user ID in the request
-
       // Fetch the user from the database
       const user = await models.user.findByPk(userId);
 
+      
       if (!user) {
         throw new Error("User not found.");
       }
 
       const { password, ...body } = req.body;
+      const { pseudo } = req.body; 
+
+      if (pseudo) {
+        const existingPseudo = await models.user.findOne({
+          where: { pseudo },
+        });
+    
+        if (existingPseudo) {
+          return res.status(422).json({ error: "Le Pseudo doit être unique." });
+        }
+      }
+      
       await user.update({ ...body, updateAt: new Date() });
       const { password: psw, ...userData } = user.toJSON();
       res.json({ message: "Profile updated successfully", data: userData });
@@ -57,7 +69,7 @@ const userController = {
       return res.json({ data });
     } catch (error) {
       const notFound = error.message.includes("not found");
-      console.log(error);
+      console.error(error);
       return res.status(notFound ? 404 : 500).json({
         error: notFound ? error.message : "Internal Server Error",
       });

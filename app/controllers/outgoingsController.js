@@ -13,6 +13,14 @@ const outgoingsController = {
             model: objective,
             where: { colocation_id: colocationId },
             required: true,
+            include: [
+              {
+                model: db.user,
+                as: "assigned_users",
+                through: { attributes: [] },
+                attributes: ["id", "firstname", "lastname", "avatar"],
+              },
+            ],
           },
         ],
       });
@@ -39,6 +47,7 @@ const outgoingsController = {
   async getOutgoing(req, res) {
     try {
       const { outgoingId, colocationId } = req.params;
+      const userId = req.user.id;
 
       const outgoingInstance = await db.outgoing.findOne({
         where: { id: outgoingId },
@@ -67,7 +76,24 @@ const outgoingsController = {
           .send({ error: "Dépense non trouvée dans cette colocation." });
       }
 
-      res.status(200).json({data:outgoingInstance});
+      // Vérifier si l'utilisateur connecté participe à la tâche
+      const isUserAssigned = outgoingInstance.objective.assigned_users.some(
+        (user) => user.id === userId
+      );
+
+      // Calculer la somme finale par utilisateur si l'utilisateur participe, sinon retourner le à zéro
+      const totalExpenseByUser = isUserAssigned
+        ? outgoingInstance.final_expense /
+          outgoingInstance.objective.assigned_users.length
+        : 0;
+
+      // Ajouter la somme finale par utilisateur à la réponse
+      const response = {
+        data: outgoingInstance,
+        totalExpenseByUser: totalExpenseByUser,
+      };
+
+      res.status(200).json(response);
     } catch (error) {
       console.log(error);
       res
@@ -75,6 +101,7 @@ const outgoingsController = {
         .send({ error: "Erreur lors de la récupération de la dépense." });
     }
   },
+
   async addOutgoing(req, res) {
     try {
       const colocationId = req.params.colocationId;
@@ -119,9 +146,10 @@ const outgoingsController = {
         objective: {
           id: newObjective.id,
           name: newObjective.name,
+          description: newObjective.description,
           deadline: newObjective.deadline,
           is_completed: newObjective.is_completed,
-          assigned_users: usersInColocation.map((user) => user.id), 
+          assigned_users: usersInColocation.map((user) => user.id),
         },
       });
     } catch (error) {
@@ -196,13 +224,14 @@ const outgoingsController = {
       }
       if (outgoing.objective.created_by !== userId) {
         return res.status(403).send({
-          error: "Vous n'avez pas la permission de supprimer cette dépense.",
+          error: "Vous n'avez pas la permission de modifier cette dépense.",
         });
       }
       // Update the objective if necessary
       if (
         updateData.is_completed !== undefined ||
         updateData.name !== undefined ||
+        updateData.description !== undefined ||
         updateData.deadline !== undefined
       ) {
         const objectiveUpdate = {};
@@ -210,6 +239,8 @@ const outgoingsController = {
           objectiveUpdate.is_completed = updateData.is_completed;
         if (updateData.name !== undefined)
           objectiveUpdate.name = updateData.name;
+        if (updateData.description !== undefined)
+          objectiveUpdate.description = updateData.description;
         if (updateData.deadline !== undefined)
           objectiveUpdate.deadline = updateData.deadline;
 
@@ -222,9 +253,7 @@ const outgoingsController = {
           final_expense: updateData.final_expense,
         });
       }
-      res
-        .status(200)
-        .send({ data: "Dépense mise à jour avec succès.", data: outgoing });
+      res.status(200).send({ data: "Dépense mise à jour avec succès." });
     } catch (error) {
       console.error(error);
       res
@@ -248,19 +277,14 @@ const outgoingsController = {
         ],
       });
       console.log("id dépense", outgoing);
-      if (!outgoing) {
-        return res.status(404).send({
-          error:
-            "Dépense non trouvée ou ne fait pas partie de cette colocation.",
-        });
-      }
 
       const user = await db.user.findOne({
         where: { id: userId, colocation_id: colocationId },
       });
-      if (!user) {
+      if (!outgoing || !user) {
         return res.status(404).send({
-          error: "Utilisateur non trouvé ou n'appartient pas à la colocation.",
+          error:
+            "Dépense ou utilisateur non trouvé ou ne fait pas partie de cette colocation.",
         });
       }
 
