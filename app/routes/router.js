@@ -16,6 +16,7 @@ apiV1Router.use("/auth", authRouter);
 // user
 apiV1Router.get("/me", authMiddleware, userController.me);
 apiV1Router.use("/users", authMiddleware, userRouter);
+apiV1Router.use("/colocation", authMiddleware, colocationRouter);
 
 //Colocation routes
 apiV1Router.use(
@@ -30,7 +31,5 @@ apiV1Router.use(
   handleUserColocationAccess,
   taskRouter
 );
-
-apiV1Router.use("/colocation", authMiddleware, colocationRouter);
 
 export default apiV1Router;
