@@ -30,7 +30,7 @@ const userController = {
         });
     
         if (existingPseudo) {
-          return res.status(400).json({ error: "Le Pseudo doit être unique." });
+          return res.status(422).json({ error: "Le Pseudo doit être unique." });
         }
       }
       

@@ -48,7 +48,7 @@ const colocationController = {
       });
   
       if (existingColocation) {
-        return res.status(400).json({ error: "Le nom de la colocation doit être unique." });
+        return res.status(422).json({ error: "Le nom de la colocation doit être unique." });
       }
   
       const data = await models.colocation.create({
@@ -72,6 +72,13 @@ const colocationController = {
       if (data) {
         const idAdmin =  data.dataValues.admin_user_id;
         if (idAdmin === idCurrentUser) {
+          const existingColocation = await models.colocation.findOne({
+            where: { name },
+          });
+      
+          if (existingColocation) {
+            return res.status(422).json({ error: "Le nom de la colocation doit être unique." });
+          }
           await data.update({ name: name });
           await data.reload();
           res.json({ data });
