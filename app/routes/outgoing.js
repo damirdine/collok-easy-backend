@@ -7,6 +7,30 @@ outgoingRouter.get(
   "/:colocationId/outgoings",
   outgoingsController.getOutgoingsByColocation
 );
+outgoingRouter.get(
+  "/:colocationId/outgoings/:outgoingId",
+  outgoingsController.getOutgoing
+);
+outgoingRouter.delete(
+  "/:colocationId/outgoings/:outgoingId",
+  outgoingsController.deleteOutgoing
+);
+outgoingRouter.post(
+  "/:colocationId/outgoings/",
+  outgoingsController.addOutgoing
+);
+outgoingRouter.put(
+  "/:colocationId/outgoings/:outgoingId",
+  outgoingsController.updateOutgoing
+);
+outgoingRouter.post(
+  "/:colocationId/outgoings/:outgoingId/assign-user",
+  outgoingsController.assignUserToOutgoing
+);
+outgoingRouter.delete(
+  "/:colocationId/outgoings/:outgoingId/assign-user",
+  outgoingsController.removeUserFromOutgoing
+);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/outgoings:
@@ -82,10 +106,6 @@ outgoingRouter.get(
  *               error: "Erreur lors de la récupération des dépenses."
  */
 
-outgoingRouter.get(
-  "/:colocationId/outgoings/:outgoingId",
-  outgoingsController.getOutgoing
-);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/outgoings/{outgoingId}:
@@ -132,6 +152,12 @@ outgoingRouter.get(
  *                       lastname: "Lastname1"
  *                       avatar: null
  *                 totalExpenseByUser: 2400.6
+ *       403:
+ *         description: Access denied to this colocation
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Accès refusé à cette colocation."
  *       404:
  *         description: Outgoing not found in this colocation
  *         content:
@@ -143,13 +169,9 @@ outgoingRouter.get(
  *         content:
  *           application/json:
  *             example:
- *               error: "Erreur lors de la récupération de la tâche."
+ *               error: "Erreur lors de la récupération de la dépense."
  */
 
-outgoingRouter.post(
-  "/:colocationId/outgoings/",
-  outgoingsController.addOutgoing
-);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/outgoings:
@@ -188,33 +210,18 @@ outgoingRouter.post(
  *                 format: date
  *                 example: "2023/10/12"
  *     responses:
- *       201:
- *         description: New outgoing successfully created
+ *       200:
+ *         description: Outgoing successfully deleted
  *         content:
  *           application/json:
  *             example:
- *               id: 12
- *               finel_expense: 10003
- *               objective:
- *                 id: 24
- *                 name: "facture eau"
- *                 description: "facture de mois de septembre"
- *                 deadline: "2023-10-12T00:00:00.000Z"
- *                 is_completed: false
- *                 assigned_users: [
- *                               1,
- *                               3,
- *                               5,
- *                               7,
- *                               9,
- *                               12,
- *                               29
- *                              ]
+ *               message: "Dépense crée avec succès."
+
  *       403:
  *         description: Access denied to this colocation
  *         content:
  *           application/json:
- *             example:
+ *             examples:
  *               error: "Accès refusé à cette colocation."
  *       500:
  *         description: Server error
@@ -223,11 +230,6 @@ outgoingRouter.post(
  *             example:
  *               error: "Erreur lors de la création de la dépense."
  */
-
-outgoingRouter.delete(
-  "/:colocationId/outgoings/:outgoingId",
-  outgoingsController.deleteOutgoing
-);
 
 /**
  * @swagger
@@ -269,8 +271,13 @@ outgoingRouter.delete(
  *         description: Permission denied
  *         content:
  *           application/json:
- *             example:
- *               error: "Vous n'avez pas la permission de supprimer cette dépense."
+ *             examples:
+ *               AccessDenied:
+ *                 value:
+ *                   error: "Accès refusé à cette colocation."
+ *               PermisseDenied:
+ *                 value:
+ *                   error: "Vous n'avez pas la permission de supprimer cette dépense."
  *       500:
  *         description: Server error
  *         content:
@@ -279,10 +286,6 @@ outgoingRouter.delete(
  *               error: "Erreur lors de la suppression de la dépense."
  */
 
-outgoingRouter.put(
-  "/:colocationId/outgoings/:outgoingId",
-  outgoingsController.updateOutgoing
-);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/outgoings/{outgoingId}:
@@ -337,8 +340,13 @@ outgoingRouter.put(
  *         description: Permission denied
  *         content:
  *           application/json:
- *             example:
- *               error: "Vous n'avez pas la permission de modifier cette dépense."
+ *             examples:
+ *               AccessDenied:
+ *                 value:
+ *                   error: "Accès refusé à cette colocation."
+ *               PermisseDenied:
+ *                 value:
+ *                   error: "Vous n'avez pas la permission de supprimer cette dépense."
  *       404:
  *         description: Outgoing not found
  *         content:
@@ -353,10 +361,6 @@ outgoingRouter.put(
  *               error: "Erreur lors de la mise à jour de la tâche."
  */
 
-outgoingRouter.post(
-  "/:colocationId/outgoings/:outgoingId/assign-user",
-  outgoingsController.assignUserToOutgoing
-);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/outgoings/{outgoingId}/assign-user:
@@ -417,10 +421,6 @@ outgoingRouter.post(
  *               error: "Erreur lors de l'assignation de l'utilisateur."
  */
 
-outgoingRouter.delete(
-  "/:colocationId/outgoings/:outgoingId/assign-user",
-  outgoingsController.removeUserFromOutgoing
-);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/outgoings/{outgoingId}/assign-user:

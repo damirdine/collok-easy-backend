@@ -121,18 +121,9 @@ const outgoingsController = {
         usersInColocation.map((user) => user.id)
       );
 
-      res.status(201).json({
-        id: newOutgoing.id,
-        final_expense: newOutgoing.final_expense,
-        objective: {
-          id: newObjective.id,
-          name: newObjective.name,
-          description: newObjective.description,
-          deadline: newObjective.deadline,
-          is_completed: newObjective.is_completed,
-          assigned_users: usersInColocation.map((user) => user.id),
-        },
-      });
+      res
+        .status(200)
+        .send({ message: "Dépense crée avec succès." });
     } catch (error) {
       console.error(error);
       res
