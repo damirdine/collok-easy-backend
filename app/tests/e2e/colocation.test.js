@@ -79,8 +79,8 @@ describe("createColocation", () => {
       .expect("Content-Type", /json/)
       .expect(200);
 
-    expect(response.body).toHaveProperty("data");
-    expect(response.body.data.message).toBe("Colocation deleted successfully.");
+    expect(response.body).toHaveProperty("message");
+    expect(response.body.message).toBe("Colocation supprimée avec succées");
   });
 
   test("should return 400 if data is invalid", async () => {

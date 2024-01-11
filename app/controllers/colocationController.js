@@ -26,9 +26,16 @@ const colocationController = {
 
   async getColocationById(req, res) {
     const { colocationID } = req.params;
-          // Rajouter vérification si l'utilisateur fait bien partie de la colcoation ?
     try {
-      const data = await models.colocation.findByPk(colocationID);
+      const data = await models.colocation.findByPk(colocationID, {
+        include: [
+          {
+            model: models.user,
+            as: 'admin_user',
+            attributes: ['id', 'firstname', 'lastname', 'pseudo'],
+          },
+        ],
+      });
       if (data) {
         res.json({ data });
       } else {
@@ -42,21 +49,25 @@ const colocationController = {
   async createColocation(req, res) {
     const { name } = req.body; 
     try {
-
       const existingColocation = await models.colocation.findOne({
         where: { name },
       });
-  
       if (existingColocation) {
         return res.status(422).json({ error: "Le nom de la colocation doit être unique." });
       }
-  
       const data = await models.colocation.create({
         name,
         admin_user_id: req.user.id,
       });
       await data.reload();
-      res.status(201).json({ data });
+      if (data) {
+        const user = await models.user.findByPk(req.user.id);
+        await user.update({
+          colocation_id: data.id,
+        });
+        await user.reload();
+        res.status(201).json({ data });
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Erreur interne du serveur" });
@@ -109,10 +120,8 @@ const colocationController = {
             where: { id: colocationID },
           });
   
-          res.json({
-            data: {
-              message: "Colocation deleted successfully.",
-            },
+          res.status(200).json({
+              message: "Colocation supprimée avec succées",
           });
         } else {
           res.status(403).json({ error: "Utilisateur non autorisé" });
@@ -132,7 +141,6 @@ const colocationController = {
 
     try {
       const data = await models.user.findByPk(colocationID);
-
       if (data) {
         res.json({ data });
       } else {
@@ -209,9 +217,6 @@ const colocationController = {
       const user = await models.user.findByPk(user_id);
       const userData = user.dataValues;
       const colocation = await models.colocation.findByPk(colocationID);
-      
-      // Faire une vérification s'il y a encore des users dans la coloc ?
-
 
       if (userData) {
         if (colocation) {
@@ -219,10 +224,8 @@ const colocationController = {
           if (idCurrentUser === idAdmin) {
             if (userData.colocation_id && userData.colocation_id == colocationID) {
               await user.update({ colocation_id: null });
-              res.json({
-                data: {
+              res.status(200).json({
                   message: "Utilisateur retiré de la colocation avec succès.",
-                },
               });
             } else {
               res
@@ -250,8 +253,8 @@ const colocationController = {
             },
         });
         if (colocation) {
-            const members = colocation.users;
-            res.json({ members });
+            const data = colocation.users;
+            res.json({ data });
         } else {
             res.status(404).json({ error: "Colocation non trouvée" });
         }
