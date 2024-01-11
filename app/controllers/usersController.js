@@ -23,6 +23,7 @@ const userController = {
 
       const { password, ...body } = req.body;
       const { pseudo } = req.body; 
+      const { email } = req.body;
 
       if (pseudo) {
         const existingPseudo = await models.user.findOne({
@@ -31,6 +32,16 @@ const userController = {
     
         if (existingPseudo) {
           return res.status(422).json({ error: "Le Pseudo doit être unique." });
+        }
+      }
+
+      if (email) {
+        const existingEmail = await models.user.findOne({
+          where: { email },
+        });
+    
+        if (existingEmail) {
+          return res.status(422).json({ error: "Cet email est déjà utilisé." });
         }
       }
       
