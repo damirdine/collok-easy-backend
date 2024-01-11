@@ -79,7 +79,7 @@ outgoingRouter.get(
  *         content:
  *           application/json:
  *             example:
- *               error: "Erreur lors de la récupération des tâches."
+ *               error: "Erreur lors de la récupération des dépenses."
  */
 
 outgoingRouter.get(
@@ -137,7 +137,7 @@ outgoingRouter.get(
  *         content:
  *           application/json:
  *             example:
- *               error: "Tâche non trouvée dans cette colocation."
+ *               error: "Dépense non trouvée dans cette colocation."
  *       500:
  *         description: Server error
  *         content:
@@ -174,15 +174,15 @@ outgoingRouter.post(
  *           schema:
  *             type: object
  *             properties:
- *               estimated_duration:
+ *               final_expense:
  *                 type: integer
- *                 example: 10
+ *                 example: 10003
  *               name:
  *                 type: string
- *                 example: "salle de bain"
+ *                 example: "facture eau"
  *               description:
  *                 type: string
- *                 example: "nettoyer le sol"
+ *                 example: "facture de mois de septembre"
  *               deadline:
  *                 type: string
  *                 format: date
@@ -193,14 +193,23 @@ outgoingRouter.post(
  *         content:
  *           application/json:
  *             example:
- *               id: 2
- *               estimated_duration: 10
+ *               id: 12
+ *               finel_expense: 10003
  *               objective:
- *                 id: 7
- *                 name: "salle de bain"
- *                 deadline: "2023-10-12"
+ *                 id: 24
+ *                 name: "facture eau"
+ *                 description: "facture de mois de septembre"
+ *                 deadline: "2023-10-12T00:00:00.000Z"
  *                 is_completed: false
- *                 assigned_users: []
+ *                 assigned_users: [
+ *                               1,
+ *                               3,
+ *                               5,
+ *                               7,
+ *                               9,
+ *                               12,
+ *                               29
+ *                              ]
  *       403:
  *         description: Access denied to this colocation
  *         content:
@@ -212,7 +221,7 @@ outgoingRouter.post(
  *         content:
  *           application/json:
  *             example:
- *               error: "Erreur lors de la création de la tâche."
+ *               error: "Erreur lors de la création de la dépense."
  */
 
 outgoingRouter.delete(
@@ -249,25 +258,25 @@ outgoingRouter.delete(
  *         content:
  *           application/json:
  *             example:
- *               message: "Tâche supprimée avec succès."
+ *               message: "Dépense supprimée avec succès."
  *       404:
- *         description: Outgoing not found
+ *         description: Dépense non trouvée.
  *         content:
  *           application/json:
  *             example:
- *               error: "Tâche non trouvée."
+ *               error: "Dépense non trouvée."
  *       403:
  *         description: Permission denied
  *         content:
  *           application/json:
  *             example:
- *               error: "Vous n'avez pas la permission de supprimer cette tâche."
+ *               error: "Vous n'avez pas la permission de supprimer cette dépense."
  *       500:
  *         description: Server error
  *         content:
  *           application/json:
  *             example:
- *               error: "Erreur lors de la suppression de la tâche."
+ *               error: "Erreur lors de la suppression de la dépense."
  */
 
 outgoingRouter.put(
@@ -309,10 +318,10 @@ outgoingRouter.put(
  *                 example: true
  *               name:
  *                 type: string
- *                 example: "salle de bain"
- *               estimated_duration:
+ *                 example: "facture de mois de janvier"
+ *               final_expense:
  *                 type: integer
- *                 example: 10
+ *                 example: 10000
  *               deadline:
  *                 type: string
  *                 format: datetime
@@ -323,26 +332,19 @@ outgoingRouter.put(
  *         content:
  *           application/json:
  *             example:
- *               message: "Tâche mise à jour avec succès."
- *               data:
- *                 id: 4
- *                 createdAt: "2023-12-21T09:56:07.000Z"
- *                 updatedAt: "2023-12-22T08:41:14.000Z"
- *                 estimated_duration: 10
- *                 objective_id: 9
- *                 objective:
- *                   id: 9
- *                   createdAt: "2023-12-21T09:56:07.000Z"
- *                   updatedAt: "2023-12-22T08:41:14.000Z"
- *                   name: "salle de bain"
- *                   deadline: "2023-10-12T15:00:00.000Z"
- *                   is_completed: true
+ *               message: "Dépense mise à jour avec succès."
+ *       403:
+ *         description: Permission denied
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Vous n'avez pas la permission de modifier cette dépense."
  *       404:
  *         description: Outgoing not found
  *         content:
  *           application/json:
  *             example:
- *               error: "Tâche non trouvée."
+ *               error: "Dépense non trouvée."
  *       500:
  *         description: Server error
  *         content:
@@ -394,13 +396,13 @@ outgoingRouter.post(
  *         content:
  *           application/json:
  *             example:
- *               message: "Utilisateur assigné à la tache avec succès."
- *       404:
+ *               message: "Utilisateur assigné à la dépense avec succès."
+ *       403:
  *         description: Outgoing not found or user does not belong to the colocation
  *         content:
  *           application/json:
  *             example:
- *               error: "Tâche non trouvée ou ne fait pas partie de cette colocation."
+ *               error: "Dépense non trouvée ou ne fait pas partie de cette colocation."
  *       500:
  *         description: Server error
  *         content:
@@ -452,19 +454,24 @@ outgoingRouter.delete(
  *         content:
  *           application/json:
  *             example:
- *               message: "Utilisateur retiré de la tâche avec succès."
+ *               message: "Utilisateur retiré de la dépense avec succès."
  *       404:
- *         description: Outgoing not found or user not assigned to the outgoing
+ *         description: Outgoing not found, or user not assigned to the outgoing
  *         content:
  *           application/json:
- *             example:
- *               error: "Tâche ou objectif non trouvé."
+ *             examples:
+ *               notFound:
+ *                 value:
+ *                   error: "Dépense ou objectif non trouvé."
+ *               userNotAssigned:
+ *                 value:
+ *                   error: "Utilisateur non assigné à la dépense."
  *       500:
  *         description: Server error
  *         content:
  *           application/json:
  *             example:
- *               error: "Erreur lors du retrait de l'utilisateur."
+ *               error: "Erreur lors du retrait de l'utilisateur"
  */
 
 export default outgoingRouter;
