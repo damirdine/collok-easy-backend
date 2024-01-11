@@ -24,20 +24,11 @@ const outgoingsController = {
           },
         ],
       });
-      // Check if the user belongs to the specified colocation
-      const userColocation = await db.user.findOne({
-        where: { id: userId, colocation_id: colocationId },
-      });
-      // If user does not belong to the colocation, return an access denied error
-      if (!userColocation) {
-        return res
-          .status(403)
-          .send({ error: "Accès refusé à cette colocation." });
-      }
       // Respond with the fetched outgoings
       res.status(200).json({ data: outgoings });
     } catch (error) {
       // Handle any errors during the process
+      console.log(error);
       res
         .status(500)
         .send({ error: "Erreur lors de la récupération des dépenses." });
@@ -107,16 +98,6 @@ const outgoingsController = {
       const colocationId = req.params.colocationId;
       const userId = req.user.id;
       const { name, description, deadline, final_expense } = req.body; // Assurez-vous que final_expense est fourni
-
-      // Vérifier l'appartenance à la colocation
-      const userColocation = await db.user.findOne({
-        where: { id: userId, colocation_id: colocationId },
-      });
-      if (!userColocation) {
-        return res
-          .status(403)
-          .send({ error: "Accès refusé à cette colocation." });
-      }
 
       const newObjective = await db.objective.create({
         name,
