@@ -28,6 +28,12 @@ colocationRouter.put(
     colocationController.updateColocationName
   );
 
+colocationRouter.delete(
+  "/:colocationID",
+  colocationValidation.validateDeleteColocation,
+  colocationController.deleteColocation
+  );
+
 colocationRouter.get(
   "/:colocationID/admin/",
   colocationValidation.validateGetColocationAdmin,
@@ -233,6 +239,50 @@ export default colocationRouter;
  *                 "name": "New Colocation Name",
  *                 "admin_user_id": 8
  *               }
+ *       404:
+ *         description: Colocation not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Colocation not found
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal Server Error
+ */
+
+  /**
+ * @swagger
+ * /api/v1/colocation/{colocationID}:
+ *   delete:
+ *     summary: Delete colocation
+ *     description: Delete a specific colocation by its ID.
+ *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: colocationID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the colocation
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               data:
+ *                 message: Colocation deleted successfully.
+ *       403:
+ *         description: User not authorized to delete the colocation
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: User not authorized to delete the colocation
  *       404:
  *         description: Colocation not found
  *         content:
