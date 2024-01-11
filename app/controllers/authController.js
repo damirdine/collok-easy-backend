@@ -15,7 +15,7 @@ const authController = (models) => ({
         where: { email: body?.email },
       });
       if (foundUser) {
-        return res.status(400).json({ error: "User email already exists" });
+        return res.status(422).json({ error: "User email already exists" });
       }
       // Hash the password
       const hashedPassword = await argon2.hash(body?.password);
