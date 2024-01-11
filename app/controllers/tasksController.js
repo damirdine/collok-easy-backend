@@ -24,16 +24,6 @@ const tasksController = {
           },
         ],
       });
-      // Check if the user belongs to the specified colocation
-      const userColocation = await db.user.findOne({
-        where: { id: userId, colocation_id: colocationId },
-      });
-      // If user does not belong to the colocation, return an access denied error
-      if (!userColocation) {
-        return res
-          .status(403)
-          .send({ error: "Accès refusé à cette colocation." });
-      }
       // Respond with the fetched tasks
       res.status(200).json({ data: tasks });
     } catch (error) {
@@ -90,16 +80,6 @@ const tasksController = {
       const userId = req.user.id; // Obtained from authentication middleware
       // Destructure task details from request body
       const { name, description, deadline, estimated_duration } = req.body;
-      // Check if the user belongs to the colocation
-      const userColocation = await db.user.findOne({
-        where: { id: userId, colocation_id: colocationId },
-      });
-      // Deny access if user is not part of the colocation
-      if (!userColocation) {
-        return res
-          .status(403)
-          .send({ error: "Accès refusé à cette colocation." });
-      }
       // Create a new objective in the colocation
       const newObjective = await db.objective.create({
         name,
