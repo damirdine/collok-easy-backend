@@ -1,7 +1,6 @@
 import express from "express";
 import authController from "../controllers/authController.js";
 import authValidator from "../middleware/validations/auth.js";
-import handleValidationErrors from "../middleware/validations/index.js";
 
 const authRouter = express.Router();
 
@@ -12,23 +11,12 @@ const authRouter = express.Router();
  *   description: APIs related to user authentication
  */
 
-authRouter.post(
-  "/register",
-  authValidator.register,
-  handleValidationErrors,
-  authController.register
-);
-authRouter.post(
-  "/login",
-  authValidator.login,
-  handleValidationErrors,
-  authController.login
-);
+authRouter.post("/register", authValidator.register, authController.register);
+authRouter.post("/login", authValidator.login, authController.login);
 
 authRouter.post(
   "/forget-password",
   authValidator.forgetPassword,
-  handleValidationErrors,
   authController.forgotPassword
 );
 

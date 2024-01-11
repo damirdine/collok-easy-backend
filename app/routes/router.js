@@ -30,6 +30,7 @@ apiV1Router.use(
   handleUserColocationAccess,
   taskRouter
 );
+
 apiV1Router.use("/colocation", authMiddleware, colocationRouter);
 
 export default apiV1Router;
