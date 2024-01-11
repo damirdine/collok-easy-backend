@@ -425,6 +425,12 @@ taskRouter.post(
  *           application/json:
  *             example:
  *               error: "Tâche non trouvée ou ne fait pas partie de cette colocation."
+ *       422:
+ *         description:  User assigned to the task
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Utilisateur dèjà assigné à la tâche."
  *       500:
  *         description: Server error
  *         content:
@@ -480,11 +486,16 @@ taskRouter.delete(
  *             example:
  *               message: "Utilisateur retiré de la tâche avec succès."
  *       404:
- *         description: Task not found or user not assigned to the task
+ *         description: Outgoing not found, or user not assigned to the outgoing
  *         content:
  *           application/json:
- *             example:
- *               error: "Tâche ou objectif non trouvé."
+ *             examples:
+ *               notFound:
+ *                 value:
+ *                   error: "Tache non trouvé."
+ *               userNotAssigned:
+ *                 value:
+ *                   error: "Utilisateur non assigné à la tache."
  *       500:
  *         description: Server error
  *         content:

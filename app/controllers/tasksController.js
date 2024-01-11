@@ -193,6 +193,7 @@ const tasksController = {
       if (
         updateData.is_completed !== undefined ||
         updateData.name !== undefined ||
+        updateData.description !== undefined ||
         updateData.deadline !== undefined
       ) {
         const objectiveUpdate = {};
@@ -200,6 +201,8 @@ const tasksController = {
           objectiveUpdate.is_completed = updateData.is_completed;
         if (updateData.name !== undefined)
           objectiveUpdate.name = updateData.name;
+        if (updateData.description !== undefined)
+          objectiveUpdate.description = updateData.description;
         if (updateData.deadline !== undefined)
           objectiveUpdate.deadline = updateData.deadline;
 
@@ -234,10 +237,24 @@ const tasksController = {
             model: db.objective,
             as: "objective",
             where: { colocation_id: colocationId },
+            include: [
+              {
+                model: db.user,
+                as: "assigned_users",
+              },
+            ],
           },
         ],
       });
 
+      const isUserAssigned = task.objective.assigned_users.some(
+        (user) => user.id === userId
+      );
+      if (isUserAssigned) {
+        return res
+          .status(422)
+          .send({ error: "Utilisateur dèjà assigné à la tâche." });
+      }
       if (!task) {
         return res.status(404).send({
           error: "Tâche non trouvée ou ne fait pas partie de cette colocation.",
