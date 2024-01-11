@@ -20,6 +20,7 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
+        unique: true,
         allowNull: false,
       },
       admin_user_id: {
@@ -71,6 +72,7 @@ module.exports = {
       },
       pseudo: {
         type: Sequelize.STRING,
+        unique: true,
         allowNull: true,
       },
       gender: {

@@ -116,6 +116,20 @@ const authController = (models) => ({
     }
   },
   async resetPasswordHtml(req, res) {
+    const errorHtml = `<h1>Error : Invalid token</h1>`;
+    const token = req.query?.token;
+    let isValidJWT = "";
+    jwt.verify(token, JWT_SECRET_KEY, (err, payload) => {
+      if (err) {
+        res.send(errorHtml);
+        return;
+      }
+      isValidJWT = true;
+      return payload;
+    });
+    if (!isValidJWT) {
+      return;
+    }
     const html = await render("auth/reset_password");
     return res.send(html);
   },
