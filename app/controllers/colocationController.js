@@ -42,6 +42,15 @@ const colocationController = {
   async createColocation(req, res) {
     const { name } = req.body; 
     try {
+
+      const existingColocation = await models.colocation.findOne({
+        where: { name },
+      });
+  
+      if (existingColocation) {
+        return res.status(400).json({ error: "Le nom de la colocation doit être unique." });
+      }
+  
       const data = await models.colocation.create({
         name,
         admin_user_id: req.user.id,
