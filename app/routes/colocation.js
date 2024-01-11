@@ -1,7 +1,7 @@
 import express from "express";
 import colocationController from "../controllers/colocationController.js";
 import colocationValidation from "../middleware/validations/colocation_new.js";
-import { handleUserCollocationAccess } from "../middleware/validations/index.js";
+import { handleUserColocationAccess } from "../middleware/validations/index.js";
 
 const colocationRouter = express.Router();
 
@@ -14,7 +14,7 @@ colocationRouter.get(
 colocationRouter.get(
   "/:colocationID",
   colocationValidation.validateGetColocationById,
-  handleUserCollocationAccess,
+  handleUserColocationAccess,
   colocationController.getColocationById
   );
 

@@ -2,7 +2,7 @@ import request from "supertest";
 import server from "./utils";
 
 const API_BASE_URL = "/api/v1";
-
+const { USER_EMAIL, USER_PASSWORD } = process.env;
 let token;
 describe("Authentication (Registration/Login)", () => {
   test("Registration)", async () => {
@@ -11,8 +11,8 @@ describe("Authentication (Registration/Login)", () => {
       .send({
         firstname: "John",
         lastname: "Doe",
-        email: "example@example.com",
-        password: "your_password",
+        email: USER_EMAIL,
+        password: USER_PASSWORD,
         birthday: "1990-01-01",
         phone: "1234567890",
         pseudo: "john_doe",
@@ -28,8 +28,8 @@ describe("Authentication (Registration/Login)", () => {
     const response = await request(server)
       .post(API_BASE_URL + "/auth/login")
       .send({
-        email: "example@example.com",
-        password: "your_password",
+        email: USER_EMAIL,
+        password: USER_PASSWORD,
       })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
