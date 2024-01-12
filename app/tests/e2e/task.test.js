@@ -15,7 +15,7 @@ beforeAll(async () => {
     })
     .set("Accept", "application/json")
     .expect("Content-Type", /json/)
-    .expect(200);
+    .expect(201);
 
   authToken = response.body?.token;
 });

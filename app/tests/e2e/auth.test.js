@@ -33,7 +33,7 @@ describe("Authentication (Registration/Login)", () => {
       })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .expect(200);
+      .expect(201);
 
     token = response.body?.token;
   });

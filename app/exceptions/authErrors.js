@@ -1,6 +1,4 @@
-import { translate } from "../helpers/translate.js";
-
-const { errors } = translate();
+import { error as errorMsg } from "../helpers/translate.js";
 
 export default class AuthError extends Error {
   constructor(message, statusCode = 400) {
@@ -10,10 +8,10 @@ export default class AuthError extends Error {
   }
 }
 
-export function handleRequestExeption(error, res) {
+export function handleRequestExeption(error, res, req) {
   console.error(error);
   const notDefaultError = !(error instanceof Error);
-  res.status(error.statuCode || 500).send({
-    error: notDefaultError ? error.message : errors.internal_server,
+  res.status(error?.statuCode || 500).send({
+    error: notDefaultError ? error.message : errorMsg(req).internal_server,
   });
 }
