@@ -180,55 +180,74 @@ outgoingRouter.delete(
  *       - Outgoing
  *     security:
  *       - BearerAuth: []
- *     summary: Add a new outgoing to a colocation
- *     description: Add a new outgoing with its related objective to the specified colocation, if the user belongs to that colocation.
+ *     summary: Create a new outgoing expense.
  *     parameters:
  *       - in: path
  *         name: colocationId
  *         required: true
+ *         description: The ID of the colocation.
  *         schema:
  *           type: integer
- *         description: The ID of the colocation
  *     requestBody:
- *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               final_expense:
- *                 type: integer
- *                 example: 10003
- *               name:
- *                 type: string
- *                 example: "facture eau"
- *               description:
- *                 type: string
- *                 example: "facture de mois de septembre"
- *               deadline:
- *                 type: string
- *                 format: date
- *                 example: "2023/10/12"
+ *           example:
+ *             name: "factureau"
+ *             description: "Expense description"
+ *             deadline: "2023/10/12"
+ *             final_expense: 10003
  *     responses:
- *       200:
- *         description: Outgoing successfully deleted
+ *       201:
+ *         description: Successful creation of outgoing expense.
  *         content:
  *           application/json:
  *             example:
- *               message: "Dépense crée avec succès."
-
+ *               message: "Dépense créée avec succès."
+ *               data:
+ *                 id: 23
+ *                 final_expense: 10003
+ *                 objective:
+ *                   id: 47
+ *                   name: "factureau"
+ *                   deadline: "2023-10-12T00:00:00.000Z"
+ *                   is_completed: false
+ *                   assigned_users:
+ *                     - id: 3
+ *                       pseudo: null
+ *                       prénom: "User3"
+ *                       nom: "Lastname3"
+ *                     - id: 5
+ *                       pseudo: null
+ *                       prénom: "User5"
+ *                       nom: "Lastname5"
+ *                     - id: 7
+ *                       pseudo: null
+ *                       prénom: "User7"
+ *                       nom: "Lastname7"
+ *                     - id: 9
+ *                       pseudo: null
+ *                       prénom: "User9"
+ *                       nom: "Lastname9"
+ *                     - id: 41
+ *                       pseudo: "elena_doe"
+ *                       prénom: "Elena"
+ *                       nom: "Doe"
+ *                     - id: 42
+ *                       pseudo: "elena_doe"
+ *                       prénom: "Elena"
+ *                       nom: "Doe"
  *       403:
  *         description: Access denied to this colocation
  *         content:
  *           application/json:
- *             examples:
+ *             example:
  *               error: "Accès refusé à cette colocation."
  *       500:
- *         description: Server error
+ *         description: Internal Server Error.
  *         content:
  *           application/json:
  *             example:
- *               error: "Erreur lors de la création de la dépense."
+ *               error: "Erreur interne du serveur."
  */
 
 /**
@@ -294,71 +313,69 @@ outgoingRouter.delete(
  *       - Outgoing
  *     security:
  *       - BearerAuth: []
- *     summary: Update a specific outgoing within a colocation
- *     description: Update the details of a specific outgoing within a colocation.
+ *     summary: Update an outgoing expense.
  *     parameters:
  *       - in: path
  *         name: colocationId
  *         required: true
+ *         description: The ID of the colocation.
  *         schema:
  *           type: integer
- *         description: The ID of the colocation
  *       - in: path
  *         name: outgoingId
  *         required: true
+ *         description: The ID of the outgoing expense.
  *         schema:
  *           type: integer
- *         description: The ID of the outgoing to update
  *     requestBody:
- *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               is_completed:
- *                 type: boolean
- *                 example: true
- *               name:
- *                 type: string
- *                 example: "facture de mois de janvier"
- *               final_expense:
- *                 type: integer
- *                 example: 10000
- *               deadline:
- *                 type: string
- *                 format: datetime
- *                 example: "2023/10/12 15:00"
+ *           example:
+ *             is_completed: true
+ *             description: "facture de mois de janvier"
+ *             final_expense: 2897
+ *             deadline: "2023/01/05 15:30"
  *     responses:
  *       200:
- *         description: Outgoing successfully updated
+ *         description: Successful update of outgoing expense.
  *         content:
  *           application/json:
  *             example:
  *               message: "Dépense mise à jour avec succès."
+ *               data:
+ *                 id: 27
+ *                 createdAt: "2024-01-12T10:42:11.000Z"
+ *                 updatedAt: "2024-01-12T11:11:49.000Z"
+ *                 final_expense: 2897
+ *                 objective_id: 52
+ *                 objective:
+ *                   id: 52
+ *                   createdAt: "2024-01-12T10:42:11.000Z"
+ *                   updatedAt: "2024-01-12T11:11:49.000Z"
+ *                   name: "facture eau"
+ *                   description: "facture de mois de janvier"
+ *                   deadline: "2023-01-05T15:30:00.000Z"
+ *                   colocation_id: 1
+ *                   created_by: 42
+ *                   is_completed: true
  *       403:
- *         description: Permission denied
+ *         description: Forbidden. User does not have permission to update the outgoing.
  *         content:
  *           application/json:
- *             examples:
- *               AccessDenied:
- *                 value:
- *                   error: "Accès refusé à cette colocation."
- *               PermisseDenied:
- *                 value:
- *                   error: "Vous n'avez pas la permission de supprimer cette dépense."
+ *             example:
+ *               error: "Vous n'avez pas la permission de modifier cette dépense."
  *       404:
- *         description: Outgoing not found
+ *         description: Outgoing expense not found or user not allowed to update.
  *         content:
  *           application/json:
  *             example:
- *               error: "Dépense non trouvée."
+ *               error: "Dépense non trouvée ou utilisateur non autorisé à la mise à jour."
  *       500:
- *         description: Server error
+ *         description: Internal Server Error.
  *         content:
  *           application/json:
  *             example:
- *               error: "Erreur lors de la mise à jour de la tâche."
+ *               error: "Erreur interne du serveur."
  */
 
 /**
@@ -480,4 +497,4 @@ outgoingRouter.delete(
  *               error: "Erreur lors du retrait de l'utilisateur"
  */
 
-export default outgoingRouter;
+export { outgoingRouter };

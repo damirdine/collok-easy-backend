@@ -11,6 +11,42 @@ taskRouter.get(
   handleValidationErrors,
   tasksController.getTasksByColocation
 );
+taskRouter.get(
+  "/:colocationId/tasks/:taskId",
+  taskValidator.getTask,
+  handleValidationErrors,
+  tasksController.getTask
+);
+taskRouter.post(
+  "/:colocationId/tasks/",
+  taskValidator.addTask,
+  handleValidationErrors,
+  tasksController.addTask
+);
+taskRouter.delete(
+  "/:colocationId/tasks/:taskId",
+  taskValidator.deleteTask,
+  handleValidationErrors,
+  tasksController.deleteTask
+);
+taskRouter.put(
+  "/:colocationId/tasks/:taskId",
+  taskValidator.updateTask,
+  handleValidationErrors,
+  tasksController.updateTask
+);
+taskRouter.post(
+  "/:colocationId/tasks/:taskId/assign-user",
+  taskValidator.assignUserToTask,
+  handleValidationErrors,
+  tasksController.assignUserToTask
+);
+taskRouter.delete(
+  "/:colocationId/tasks/:taskId/assign-user",
+  taskValidator.removeUserFromTask,
+  handleValidationErrors,
+  tasksController.removeUserFromTask
+);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/tasks:
@@ -86,12 +122,6 @@ taskRouter.get(
  *               error: "Erreur lors de la récupération des tâches."
  */
 
-taskRouter.get(
-  "/:colocationId/tasks/:taskId",
-  taskValidator.getTask,
-  handleValidationErrors,
-  tasksController.getTask
-);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/tasks/{taskId}:
@@ -148,6 +178,12 @@ taskRouter.get(
  *                   ]
  *                 }
  *               }
+ *       403:
+ *         description: Access denied to this colocation
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Accès refusé à cette colocation."
  *       404:
  *         description: Task not found in this colocation
  *         content:
@@ -162,12 +198,6 @@ taskRouter.get(
  *               error: "Erreur lors de la récupération de la tâche."
  */
 
-taskRouter.post(
-  "/:colocationId/tasks/",
-  taskValidator.addTask,
-  handleValidationErrors,
-  tasksController.addTask
-);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/tasks:
@@ -211,14 +241,16 @@ taskRouter.post(
  *         content:
  *           application/json:
  *             example:
- *               id: 2
- *               estimated_duration: 10
- *               objective:
- *                 id: 7
- *                 name: "salle de bain"
- *                 deadline: "2023-10-12"
- *                 is_completed: false
- *                 assigned_users: []
+ *               message: "Dépense créée avec succès."
+ *               data:
+ *                 id: 2
+ *                 estimated_duration: 10
+ *                 objective:
+ *                   id: 7
+ *                   name: "salle de bain"
+ *                   deadline: "2023-10-12"
+ *                   is_completed: false
+ *                   assigned_users: []
  *       403:
  *         description: Access denied to this colocation
  *         content:
@@ -232,13 +264,6 @@ taskRouter.post(
  *             example:
  *               error: "Erreur lors de la création de la tâche."
  */
-
-taskRouter.delete(
-  "/:colocationId/tasks/:taskId",
-  taskValidator.deleteTask,
-  handleValidationErrors,
-  tasksController.deleteTask
-);
 
 /**
  * @swagger
@@ -290,12 +315,6 @@ taskRouter.delete(
  *               error: "Erreur lors de la suppression de la tâche."
  */
 
-taskRouter.put(
-  "/:colocationId/tasks/:taskId",
-  taskValidator.updateTask,
-  handleValidationErrors,
-  tasksController.updateTask
-);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/tasks/{taskId}:
@@ -373,12 +392,6 @@ taskRouter.put(
  *               error: "Erreur lors de la mise à jour de la tâche."
  */
 
-taskRouter.post(
-  "/:colocationId/tasks/:taskId/assign-user",
-  taskValidator.assignUserToTask,
-  handleValidationErrors,
-  tasksController.assignUserToTask
-);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/tasks/{taskId}/assign-user:
@@ -439,12 +452,6 @@ taskRouter.post(
  *               error: "Erreur lors de l'assignation de l'utilisateur."
  */
 
-taskRouter.delete(
-  "/:colocationId/tasks/:taskId/assign-user",
-  taskValidator.removeUserFromTask,
-  handleValidationErrors,
-  tasksController.removeUserFromTask
-);
 /**
  * @swagger
  * /api/v1/colocation/{colocationId}/tasks/{taskId}/assign-user:
