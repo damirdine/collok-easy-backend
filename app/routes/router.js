@@ -2,7 +2,7 @@ import express from "express";
 import userController from "../controllers/usersController.js";
 import authMiddleware from "../middleware/auth.js";
 import authRouter from "./auth.js";
-import outgoingRouter from "./outgoing.js";
+import { outgoingRouter } from "./outgoing.js";
 import taskRouter from "./task.js";
 import colocationRouter from "./colocation.js";
 import userRouter from "./user.js";

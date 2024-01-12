@@ -97,8 +97,7 @@ const outgoingsController = {
     try {
       const colocationId = req.params.colocationId;
       const userId = req.user.id;
-      const { name, description, deadline, final_expense } = req.body; // Assurez-vous que final_expense est fourni
-
+      const { name, description, deadline, final_expense } = req.body;
       const newObjective = await db.objective.create({
         name,
         description,
@@ -120,10 +119,23 @@ const outgoingsController = {
       await newObjective.addAssigned_users(
         usersInColocation.map((user) => user.id)
       );
-
-      res
-        .status(200)
-        .send({ message: "Dépense crée avec succès." });
+      res.status(201).json({
+        message: "Dépense crée avec succès.",
+        data: {
+          id: newOutgoing.id,
+          final_expense: newOutgoing.final_expense,
+          objective: {
+            id: newObjective.id,
+            name: newObjective.name,
+            deadline: newObjective.deadline,
+            is_completed: newObjective.is_completed,
+            assigned_users: usersInColocation.map((user) => ({
+              id: user.id,
+              pseudo: user.pseudo,
+            })),
+          },
+        },
+      });
     } catch (error) {
       console.error(error);
       res
@@ -225,7 +237,9 @@ const outgoingsController = {
           final_expense: updateData.final_expense,
         });
       }
-      res.status(200).send({ data: "Dépense mise à jour avec succès." });
+      res
+        .status(200)
+        .send({ message: "Dépense mise à jour avec succès.", data: outgoing });
     } catch (error) {
       console.error(error);
       res
