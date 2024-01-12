@@ -17,6 +17,44 @@ import {
 
 const { msg, errors } = translate();
 
+const generateTokensAndExpiration = async (user) => {
+  // Créer le JWT pour l'utilisateur
+  const accessToken = jwt.sign(user.toJSON(), JWT_SECRET_KEY, {
+    expiresIn: JWT_EXPIRED_IN,
+  });
+
+  // Créer le refreshToken
+  const refreshToken = jwt.sign(user.toJSON(), REFRESH_TOKEN_SECRET, {
+    expiresIn: REFRESH_TOKEN_EXPIRED_IN,
+  });
+
+  const expiresIn = JWT_EXPIRED_IN; // Par exemple, "1h"
+  const unit = expiresIn.charAt(expiresIn.length - 1);
+  const duration = parseInt(expiresIn.slice(0, -1));
+
+  let expiresInMillis;
+  switch (unit) {
+    case "s":
+      expiresInMillis = duration * 1000;
+      break;
+    case "m":
+      expiresInMillis = duration * 60 * 1000;
+      break;
+    case "h":
+      expiresInMillis = duration * 60 * 60 * 1000;
+      break;
+    // Ajoutez d'autres cas selon vos besoins (j, d, etc.)
+    default:
+      throw new Error("Invalid time unit in JWT_EXPIRED_IN");
+  }
+
+  const accessTokenExpiration = Math.floor(
+    (Date.now() + expiresInMillis) / 1000
+  );
+
+  return { accessToken, refreshToken, accessTokenExpiration };
+};
+
 const authController = (models) => ({
   async register(req, res) {
     try {
@@ -36,27 +74,13 @@ const authController = (models) => ({
       const user = Object.assign({ ...body }, { password: hashedPassword });
       const userCreated = await models.user.create(user);
 
-      // Créer le JWT pour l'utilisateur
-      const accessToken = jwt.sign(
-        { ...userCreated.toJSON() },
-        JWT_SECRET_KEY,
-        {
-          expiresIn: JWT_EXPIRED_IN,
-        }
-      );
-
-      // Créer le refreshToken
-      const refreshToken = jwt.sign(
-        { ...userCreated.toJSON() },
-        REFRESH_TOKEN_SECRET,
-        {
-          expiresIn: REFRESH_TOKEN_EXPIRED_IN,
-        }
-      );
+      const { accessToken, refreshToken, accessTokenExpiration } =
+        await generateTokensAndExpiration(userCreated);
 
       return res.status(201).json({
         message: msg.success_register,
         token: accessToken,
+        accessTokenExpiration: accessTokenExpiration,
         refreshToken: refreshToken,
       });
     } catch (error) {
@@ -87,19 +111,13 @@ const authController = (models) => ({
           .json({ error: errorMsg(req)?.password_not_match });
       }
 
-      // Créer le JWT pour l'utilisateur
-      const accessToken = jwt.sign(user.toJSON(), JWT_SECRET_KEY, {
-        expiresIn: JWT_EXPIRED_IN,
-      });
-
-      // Créer le refreshToken
-      const refreshToken = jwt.sign(user.toJSON(), REFRESH_TOKEN_SECRET, {
-        expiresIn: REFRESH_TOKEN_EXPIRED_IN,
-      });
+      const { accessToken, refreshToken, accessTokenExpiration } =
+        await generateTokensAndExpiration(user);
 
       return res.status(201).json({
         message: msgSuccess(req).success_login,
         token: accessToken,
+        accessTokenExpiration: accessTokenExpiration,
         refreshToken: refreshToken,
       });
     } catch (error) {
@@ -107,6 +125,7 @@ const authController = (models) => ({
       return res.status(500).json({ error: errorMsg(req).internal_server });
     }
   },
+
   async forgotPassword(req, res) {
     try {
       const { email } = req.body;
@@ -185,17 +204,20 @@ const authController = (models) => ({
         // Supprimer la propriété 'exp' du payload si elle existe
         delete decoded.exp;
         delete decoded.iat;
-        // Générer un nouveau access token
+
         // Vérifier si l'utilisateur existe toujours dans la base de données
         const user = await models.user.findByPk(decoded.id);
         if (!user) {
           return res.status(404).json({ error: errors.user_not_found });
         }
-        const newAccessToken = jwt.sign(decoded, JWT_SECRET_KEY, {
-          expiresIn: JWT_EXPIRED_IN,
-        });
 
-        return res.json({ accessToken: newAccessToken });
+        const { accessToken, accessTokenExpiration } =
+          await generateTokensAndExpiration(user);
+
+        return res.json({
+          token: accessToken,
+          accessTokenExpiration: accessTokenExpiration,
+        });
       });
     } catch (error) {
       console.error(error);
