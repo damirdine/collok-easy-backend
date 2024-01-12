@@ -253,4 +253,27 @@ export const swagger = {
       },
     },
   },
+  "/api/v1/auth/refresh-token": {
+    post: {
+      summary: "Refresh Access Token",
+      description: "Refresh the access token using the refresh token.",
+      tags: ["Authentication"],
+      parameters,
+      responses: {
+        200: {
+          description: "Successful response",
+          content: {
+            "application/json": {
+              example: {
+                token: "<new_generated_access_token>",
+                accessTokenExpiration:
+                  "<new_access_token_expiration_timestamp>",
+              },
+            },
+          },
+        },
+        ...defaultErrors,
+      },
+    },
+  },
 };
