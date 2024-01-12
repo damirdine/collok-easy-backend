@@ -45,8 +45,8 @@ describe("Tasks Controller", () => {
       .expect("Content-Type", /json/)
       .expect(201);
 
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("estimated_duration", 5);
-    expect(response.body).toHaveProperty("objective");
+    expect(response.body?.data).toHaveProperty("id");
+    expect(response.body?.data).toHaveProperty("estimated_duration", 5);
+    expect(response.body?.data).toHaveProperty("objective");
   });
 });

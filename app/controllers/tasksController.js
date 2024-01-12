@@ -80,7 +80,6 @@ const tasksController = {
       const userId = req.user.id; // Obtained from authentication middleware
       // Destructure task details from request body
       const { name, description, deadline, estimated_duration } = req.body;
-      console.log(req.body, "reqbody");
       // Create a new objective in the colocation
       const newObjective = await db.objective.create({
         name,
