@@ -1,4 +1,5 @@
 import { validationResult } from "express-validator";
+import { error } from "../../helpers/translate.js";
 
 export default function handleValidationErrors(req, res, next) {
   const errors = validationResult(req);
@@ -8,12 +9,16 @@ export default function handleValidationErrors(req, res, next) {
   next();
 }
 export function handleUserColocationAccess(req, res, next) {
-  const urlPattern = /\/colocation\/(\w+)\//;
-  const match = req.originalUrl.match(urlPattern);
-  const colocationId = match ? parseInt(match[1]) : null;
-  const userId = req.user.colocation_id;
-  if (colocationId !== userId) {
-    return res.status(403).json({ error: "Accès refusé à cette colocation." });
+  let colocationId = req.param?.colocationId;
+  if (!colocationId) {
+    const urlPattern = /\/colocation\/(\w+)\//;
+    const match = req.originalUrl.match(urlPattern);
+    colocationId = match ? parseInt(match[1]) : null;
+  }
+  const userColocationId = req.user.colocation_id;
+
+  if (colocationId !== userColocationId) {
+    return res.status(403).json({ error: error(req).colocation_access_denied });
   }
   next();
 }

@@ -1,56 +1,60 @@
 import models from "../models/index.js";
+import { translate } from "../helpers/translate.js";
+import AuthError, { handleRequestExeption } from "../exceptions/authErrors.js";
+
+const { errors, msg } = translate();
 
 const userController = {
   async getAll(req, res) {
     try {
-      const users = await models.user.findAll();
+      const users = await models.user.findAll({
+        attributes: { exclude: ["password"] },
+      });
       res.json({ data: users });
     } catch (error) {
-      console.error(error);
-      res.status(500).send({ error: "Erreur serveur" });
+      handleRequestExeption(error, res);
     }
   },
   async editProfile(req, res) {
     try {
       const userId = req?.user?.id; // Assuming you have user ID in the request
       // Fetch the user from the database
-      const user = await models.user.findByPk(userId);
+      const user = await models.user.findByPk(userId, {
+        attributes: { exclude: ["password"] },
+      });
 
-      
       if (!user) {
-        throw new Error("User not found.");
+        throw new AuthError(errors.user_not_found, 400);
       }
 
-      const { password, ...body } = req.body;
-      const { pseudo } = req.body; 
-      const { email } = req.body;
-
+      const { pseudo, email } = req.body;
       if (pseudo) {
         const existingPseudo = await models.user.findOne({
           where: { pseudo },
         });
-    
+
         if (existingPseudo) {
-          return res.status(422).json({ error: "Le Pseudo doit être unique." });
+          throw new AuthError(errors.pseudo_already_used, 422);
         }
       }
 
       if (email) {
         const existingEmail = await models.user.findOne({
+          attributes: { exclude: ["password"] },
           where: { email },
         });
-    
+
         if (existingEmail) {
-          return res.status(422).json({ error: "Cet email est déjà utilisé." });
+          throw new AuthError(errors.email_already_used, 422);
         }
       }
-      
+
+      const { password, ...body } = req.body;
       await user.update({ ...body, updateAt: new Date() });
-      const { password: psw, ...userData } = user.toJSON();
-      res.json({ message: "Profile updated successfully", data: userData });
+
+      res.json({ message: msg.success_profile_update, data: user.toJSON() });
     } catch (error) {
-      console.error(error);
-      res.status(500).send({ error: "Erreur serveur" });
+      return handleRequestExeption(error, req);
     }
   },
 
@@ -60,48 +64,43 @@ const userController = {
       const userToDelete = await models.user.findByPk(userIdToDelete);
 
       if (!userToDelete) {
-        throw new Error("User not found.");
+        throw new AuthError(errors.user_not_found, 404);
       }
       await userToDelete.destroy();
 
-      res.json({ message: "Profile deleted successfully" });
+      res.json({ message: msg.success_profile_delete });
     } catch (error) {
-      console.error(error);
-      res.status(500).send({ error: "Erreur serveur" });
+      handleRequestExeption(error, res);
     }
   },
   async me(req, res) {
     try {
-      const foundUser = await models.user.findByPk(req?.user?.id || 1);
-      if (!foundUser) {
-        throw new Error("User not found.");
-      }
-      const { password, ...data } = foundUser.toJSON();
-      return res.json({ data });
-    } catch (error) {
-      const notFound = error.message.includes("not found");
-      console.error(error);
-      return res.status(notFound ? 404 : 500).json({
-        error: notFound ? error.message : "Internal Server Error",
+      const foundUser = await models.user.findByPk(req?.user?.id || 1, {
+        attributes: { exclude: ["password"] },
       });
+      if (!foundUser) {
+        throw new AuthError(errors.user_not_found, 404);
+      }
+      return res.json({ data: foundUser.toJSON() });
+    } catch (error) {
+      handleRequestExeption(error, res);
     }
   },
   async isExist(req, res) {
     try {
       const user = models.user.findOne({
+        attributes: { exclude: ["password"] },
         where: {
           [models.sequelize.Op.or]: [
             { email: req.body?.email },
-            { pseudo: req.body?.nickname ?? req.body?.pseudo },
+            { pseudo: req.body?.nickname || req.body?.pseudo },
           ],
         },
       });
 
-      const { password: psw, ...userData } = user.toJSON();
-      res.json({ data: userData });
+      res.json({ data: user.toJSON() });
     } catch (error) {
-      console.error(error);
-      res.status(500).send({ error: "Erreur serveur" });
+      handleRequestExeption(error, res);
     }
   },
 };

@@ -140,7 +140,9 @@ const colocationController = {
     const { colocationID } = req.params;
 
     try {
-      const data = await models.user.findByPk(colocationID);
+      const data = await models.user.findByPk(colocationID, {
+        attributes: { exclude: ["password"] }
+      });
       if (data) {
         res.json({ data });
       } else {
@@ -250,6 +252,7 @@ const colocationController = {
         const colocation = await models.colocation.findByPk(colocationID, {
             include: {
                 model: models.user,
+                attributes: { exclude: ["password"] },
             },
         });
         if (colocation) {
