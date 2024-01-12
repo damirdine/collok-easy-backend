@@ -3,7 +3,7 @@
 const translation = {
   default: "fr",
   fr: {
-    error: {
+    errors: {
       user_not_found: "Utilisateur non trouvé.",
       password_no_valid:
         "Le mot de passe doit comporter au moins 8 caractères et inclure au moins une lettre majuscule, un chiffre et un caractère spécial.",
@@ -25,7 +25,7 @@ const translation = {
     },
   },
   en: {
-    error: {
+    errors: {
       user_not_found: "User not found.",
       password_no_valid:
         "Password must be at least 8 characters long and include at least one uppercase letter, one number, and one special character.",
@@ -85,10 +85,40 @@ const translation = {
  * @param {string} [lang="fr"] - The language code. Defaults to "fr" (French).
  * @returns {Messages} - An object containing translated messages for the specified language, or null if the language is not found.
  */
+const validLang = ["fr", "en"];
 export function translate(lang = "fr") {
-  const validLang = ["fr", "en"];
   if (!validLang.includes(lang)) {
     return translation[translation.default || "fr"];
   }
   return translation[lang];
+}
+
+/**
+ * Translates messages based on the specified language.
+ * @param {string} [lang="fr"] - The language code. Defaults to "fr" (French).
+ * @returns {ErrorMessages} - An object containing translated messages for the specified language, or null if the language is not found.
+ */
+export function error(req) {
+  const headerLang = req.headers["accept-language"];
+  const defaultLang = translation.default || "fr";
+  let lang = headerLang || defaultLang;
+  if (!validLang.includes(lang)) {
+    return translation[defaultLang].errors;
+  }
+  return translation[lang].errors;
+}
+
+/**
+ * Translates messages based on the specified language.
+ * @param {string} [lang="fr"] - The language code. Defaults to "fr" (French).
+ * @returns {SuccessMessages} - An object containing translated messages for the specified language, or null if the language is not found.
+ */
+export function msgSuccess(req) {
+  const headerLang = req.headers["accept-language"];
+  const defaultLang = translation.default || "fr";
+  let lang = headerLang || defaultLang;
+  if (!validLang.includes(lang)) {
+    return translation[defaultLang].msg;
+  }
+  return translation[lang].msg;
 }
