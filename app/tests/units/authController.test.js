@@ -26,9 +26,10 @@ describe("Name of the group", () => {
   test("should ", async () => {
     const { login } = auth(models);
     const req = {
+      headers: {},
       body: {
-        email: "email@ecample",
-        password: "your_password",
+        email: process.env.USER_EMAIL,
+        password: process.env.USER_PASSWORD,
       },
     };
     const res = {
