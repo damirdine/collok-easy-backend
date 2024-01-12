@@ -12,7 +12,7 @@ const userRouter = express.Router();
 
 // Route pour récupérer tous les utilisateurs
 
-userRouter.get("/", userController.me);
+// userRouter.get("/", userController.me);
 
 userRouter.put("/", userController.editProfile);
 
@@ -55,36 +55,39 @@ export default userRouter;
  *
  */
 
+////get /users
+
+// *   get:
+//  *     summary: Get user profile information
+//  *     description: Retrieve information about the authenticated user.
+//  *     tags: [User profile]
+//  *     security:
+//  *       - BearerAuth: []
+//  *     responses:
+//  *       200:
+//  *         description: Successful response
+//  *         content:
+//  *           application/json:
+//  *             example:
+//  *               data:
+//  *                 username: john_doe
+//  *                 email: example@example.com
+//  *                 firstname: John
+//  *                 lastname: Doe
+//  *                 birthday: 1990-01-01
+//  *                 phone: "1234567890"
+//  *                 gender: male
+//  *                 avatar: https://example.com/avatar.jpg
+//  *       401:
+//  *         description: Unauthorized
+//  *         content:
+//  *           application/json:
+//  *             example:
+//  *               error: Unauthorized access
+
 /**
  * @swagger
  * /api/v1/users:
- *   get:
- *     summary: Get user profile information
- *     description: Retrieve information about the authenticated user.
- *     tags: [User profile]
- *     security:
- *       - BearerAuth: []
- *     responses:
- *       200:
- *         description: Successful response
- *         content:
- *           application/json:
- *             example:
- *               data:
- *                 username: john_doe
- *                 email: example@example.com
- *                 firstname: John
- *                 lastname: Doe
- *                 birthday: 1990-01-01
- *                 phone: "1234567890"
- *                 gender: male
- *                 avatar: https://example.com/avatar.jpg
- *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             example:
- *               error: Unauthorized access
  *   put:
  *     summary: Update user profile
  *     description: Update information for the authenticated user.
