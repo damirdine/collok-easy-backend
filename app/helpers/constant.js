@@ -1,8 +1,10 @@
 export const JWT_SECRET_KEY =
   process.env?.JWT_SECRET_KEY || "very_strong_and_long_phrase_secret";
+export const REFRESH_TOKEN_SECRET =
+  process.env?.REFRESH_TOKEN_SECRET || "long_phrase_secret";
 export const JWT_EXPIRED_IN = process.env?.JWT_EXPIRED_IN || "1h";
 export const REFRESH_TOKEN_EXPIRED_IN =
-  process.env?.REFRESH_TOKEN_EXPIRED_IN || "3m";
+  process.env?.REFRESH_TOKEN_EXPIRED_IN || "1y";
 
 export const PASSWORD_RESET_SECRET_KEY =
   process.env.PASSWORD_RESET_SECRET_KEY || "very_strong_and_long_phrase_secret";

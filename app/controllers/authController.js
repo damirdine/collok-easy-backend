@@ -5,6 +5,7 @@ import {
   JWT_EXPIRED_IN,
   JWT_SECRET_KEY,
   REFRESH_TOKEN_EXPIRED_IN,
+  REFRESH_TOKEN_SECRET,
 } from "../helpers/constant.js";
 import { sendEmail } from "../helpers/email.js";
 import { render } from "../helpers/template.js";
@@ -13,10 +14,8 @@ import {
   error as errorMsg,
   msgSuccess,
 } from "../helpers/translate.js";
-import { handleRequestExeption } from "../exceptions/authErrors.js";
 
-const { msg } = translate();
-// const error(req) = contents.errors;
+const { msg, errors } = translate();
 
 const authController = (models) => ({
   async register(req, res) {
@@ -38,14 +37,18 @@ const authController = (models) => ({
       const userCreated = await models.user.create(user);
 
       // Créer le JWT pour l'utilisateur
-      const userJWT = jwt.sign({ ...userCreated.toJSON() }, JWT_SECRET_KEY, {
-        expiresIn: JWT_EXPIRED_IN,
-      });
+      const accessToken = jwt.sign(
+        { ...userCreated.toJSON() },
+        JWT_SECRET_KEY,
+        {
+          expiresIn: JWT_EXPIRED_IN,
+        }
+      );
 
       // Créer le refreshToken
       const refreshToken = jwt.sign(
         { ...userCreated.toJSON() },
-        JWT_SECRET_KEY,
+        REFRESH_TOKEN_SECRET,
         {
           expiresIn: REFRESH_TOKEN_EXPIRED_IN,
         }
@@ -53,11 +56,12 @@ const authController = (models) => ({
 
       return res.status(201).json({
         message: msg.success_register,
-        token: userJWT,
+        token: accessToken,
         refreshToken: refreshToken,
       });
     } catch (error) {
-      handleRequestExeption(error, res, req);
+      console.error(error);
+      return res.status(500).json({ error: errorMsg(req).internal_server });
     }
   },
   async login(req, res) {
@@ -84,18 +88,18 @@ const authController = (models) => ({
       }
 
       // Créer le JWT pour l'utilisateur
-      const userJWT = jwt.sign(user.toJSON(), JWT_SECRET_KEY, {
+      const accessToken = jwt.sign(user.toJSON(), JWT_SECRET_KEY, {
         expiresIn: JWT_EXPIRED_IN,
       });
 
       // Créer le refreshToken
-      const refreshToken = jwt.sign(user.toJSON(), JWT_SECRET_KEY, {
+      const refreshToken = jwt.sign(user.toJSON(), REFRESH_TOKEN_SECRET, {
         expiresIn: REFRESH_TOKEN_EXPIRED_IN,
       });
 
       return res.status(201).json({
         message: msgSuccess(req).success_login,
-        token: userJWT,
+        token: accessToken,
         refreshToken: refreshToken,
       });
     } catch (error) {
@@ -171,7 +175,7 @@ const authController = (models) => ({
           .json({ error: errorMsg(req).invalid_credentials });
       }
 
-      jwt.verify(refreshToken, JWT_SECRET_KEY, async (err, decoded) => {
+      jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, async (err, decoded) => {
         if (err) {
           return res
             .status(403)
@@ -180,13 +184,18 @@ const authController = (models) => ({
 
         // Supprimer la propriété 'exp' du payload si elle existe
         delete decoded.exp;
-
+        delete decoded.iat;
         // Générer un nouveau access token
+        // Vérifier si l'utilisateur existe toujours dans la base de données
+        const user = await models.user.findByPk(decoded.id);
+        if (!user) {
+          return res.status(404).json({ error: errors.user_not_found });
+        }
         const newAccessToken = jwt.sign(decoded, JWT_SECRET_KEY, {
           expiresIn: JWT_EXPIRED_IN,
         });
 
-        return res.json({ token: newAccessToken });
+        return res.json({ accessToken: newAccessToken });
       });
     } catch (error) {
       console.error(error);
