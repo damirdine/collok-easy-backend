@@ -12,7 +12,7 @@ const userRouter = express.Router();
 
 // Route pour récupérer tous les utilisateurs
 
-// userRouter.get("/", userController.me);
+userRouter.get("/", userController.me);
 
 userRouter.put("/", userController.editProfile);
 
