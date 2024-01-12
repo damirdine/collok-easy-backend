@@ -4,8 +4,9 @@ import server from "./utils";
 const API_BASE_URL = "/api/v1";
 
 function makeid(length) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {
@@ -28,7 +29,7 @@ describe("authenticated", () => {
       })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .expect(200);
+      .expect(201);
 
     authToken = response.body?.token;
   });
@@ -54,7 +55,7 @@ describe("createColocation", () => {
       name: name,
       admin_user_id: 1,
     };
-    
+
     const response = await request(server)
       .post(API_BASE_URL + "/colocation")
       .set("Authorization", `Bearer ${authToken}`)

@@ -9,12 +9,13 @@ import {
 } from "../helpers/constant.js";
 import { sendEmail } from "../helpers/email.js";
 import { render } from "../helpers/template.js";
-import { translate } from "../helpers/translate.js";
-import db from "../models/index.js";
+import {
+  translate,
+  error as errorMsg,
+  msgSuccess,
+} from "../helpers/translate.js";
 
-const contents = translate();
-const errors = contents.errors;
-const msg = contents.msg;
+const { msg, errors } = translate();
 
 const authController = (models) => ({
   async register(req, res) {
@@ -25,7 +26,7 @@ const authController = (models) => ({
       });
 
       if (foundUser) {
-        return res.status(422).json({ error: errors.user_not_found });
+        return res.status(422).json({ error: errorMsg(req).user_not_found });
       }
 
       // Hash the password
@@ -60,7 +61,7 @@ const authController = (models) => ({
       });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: errors.internal_server });
+      return res.status(500).json({ error: errorMsg(req).internal_server });
     }
   },
   async login(req, res) {
@@ -72,7 +73,7 @@ const authController = (models) => ({
 
       // Check if the user exists
       if (!user) {
-        return res.status(401).json({ error: errors.user_not_found });
+        return res.status(422).json({ error: errorMsg(req).user_not_found });
       }
 
       // Compare the provided password with the hashed password in the database
@@ -80,9 +81,10 @@ const authController = (models) => ({
         user.password,
         req.body?.password
       );
-
       if (!passwordMatch) {
-        return res.status(401).json({ error: errors.password_not_match });
+        return res
+          .status(422)
+          .json({ error: errorMsg(req)?.password_not_match });
       }
 
       // Créer le JWT pour l'utilisateur
@@ -95,13 +97,14 @@ const authController = (models) => ({
         expiresIn: REFRESH_TOKEN_EXPIRED_IN,
       });
 
-      return res.json({
+      return res.status(201).json({
+        message: msgSuccess(req).success_login,
         token: accessToken,
         refreshToken: refreshToken,
       });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: errors.internal_server });
+      return res.status(500).json({ error: errorMsg(req).internal_server });
     }
   },
   async forgotPassword(req, res) {
@@ -111,7 +114,7 @@ const authController = (models) => ({
         where: { email: email?.toLowerCase() },
       });
       if (!user) {
-        return res.status(404).json({ error: errors.user_not_found });
+        return res.status(404).json({ error: errorMsg(req).user_not_found });
       }
       const token = jwt.sign({ email: user.email }, JWT_SECRET_KEY, {
         expiresIn: "2h",
@@ -124,7 +127,7 @@ const authController = (models) => ({
       });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: errors.internal_server });
+      return res.status(500).json({ error: errorMsg(req).internal_server });
     }
   },
   async resetPasswordHtml(req, res) {
@@ -152,14 +155,14 @@ const authController = (models) => ({
         where: { email: decodedToken?.email?.toLowerCase() },
       });
       if (!user) {
-        return res.status(404).json({ error: errors.user_not_found });
+        return res.status(404).json({ error: errorMsg(req).user_not_found });
       }
       const hashedPassword = await argon2.hash(req.body?.password);
       await user.update({ password: hashedPassword });
       return res.json({ message: msg.success_password_reset });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: errors.internal_server });
+      return res.status(500).json({ error: errorMsg(req).internal_server });
     }
   },
   async refreshAccessToken(req, res) {
@@ -167,14 +170,16 @@ const authController = (models) => ({
       const refreshToken = req.header("Authorization")?.split("Bearer ")[1];
 
       if (!refreshToken) {
-        return res.status(401).json({ error: errors.invalid_credentials });
+        return res
+          .status(401)
+          .json({ error: errorMsg(req).invalid_credentials });
       }
 
       jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, async (err, decoded) => {
         if (err) {
           return res
             .status(403)
-            .json({ error: errors.invalid_credentials_403 });
+            .json({ error: errorMsg(req).invalid_credentials_403 });
         }
 
         // Supprimer la propriété 'exp' du payload si elle existe
@@ -182,7 +187,7 @@ const authController = (models) => ({
         delete decoded.iat;
         // Générer un nouveau access token
         // Vérifier si l'utilisateur existe toujours dans la base de données
-        const user = await db.user.findByPk(decoded.id);
+        const user = await models.user.findByPk(decoded.id);
         if (!user) {
           return res.status(404).json({ error: errors.user_not_found });
         }
@@ -194,7 +199,7 @@ const authController = (models) => ({
       });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: errors.internal_server });
+      return res.status(500).json({ error: errorMsg(req).internal_server });
     }
   },
 });

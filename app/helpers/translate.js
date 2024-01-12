@@ -1,4 +1,5 @@
 "use-strict";
+const validLang = ["fr", "en"];
 
 const translation = {
   default: "fr",
@@ -85,12 +86,13 @@ const translation = {
  * @param {string} [lang="fr"] - The language code. Defaults to "fr" (French).
  * @returns {Messages} - An object containing translated messages for the specified language, or null if the language is not found.
  */
-const validLang = ["fr", "en"];
 export function translate(lang = "fr") {
   if (!validLang.includes(lang)) {
-    return translation[translation.default || "fr"];
+    const { errors, msg } = translation[translation.default || "fr"];
+    return { errors, msg };
   }
-  return translation[lang];
+  const { errors, msg } = translation[lang];
+  return { errors, msg };
 }
 
 /**
@@ -114,7 +116,7 @@ export function error(req) {
  * @returns {SuccessMessages} - An object containing translated messages for the specified language, or null if the language is not found.
  */
 export function msgSuccess(req) {
-  const headerLang = req.headers["accept-language"];
+  const headerLang = req?.headers["accept-language"] || null;
   const defaultLang = translation.default || "fr";
   let lang = headerLang || defaultLang;
   if (!validLang.includes(lang)) {
