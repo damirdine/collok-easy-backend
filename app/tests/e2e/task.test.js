@@ -10,7 +10,7 @@ beforeAll(async () => {
   const response = await request(server)
     .post(API_BASE_URL + "/auth/login")
     .send({
-      email: "user1@example.com",
+      email: "user3@example.com",
       password: "your_password",
     })
     .set("Accept", "application/json")
