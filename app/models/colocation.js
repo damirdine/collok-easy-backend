@@ -1,4 +1,3 @@
-
 export default (sequelize, Sequelize) => {
   const { DataTypes } = Sequelize;
   const colocation = sequelize.define(
@@ -9,14 +8,12 @@ export default (sequelize, Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      createdAt: {
-        field: "created_at",
+      created_at: {
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
       },
-      updatedAt: {
-        field: "updated_at",
+      updated_at: {
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
@@ -33,6 +30,9 @@ export default (sequelize, Sequelize) => {
     },
     {
       tableName: "colocation",
+      underscored: true,
+      createdAt: "created_at",
+      updatedAt: "updated_at",
     }
   );
   colocation.associate = (models) => {
