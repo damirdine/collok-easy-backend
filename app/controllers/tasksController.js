@@ -232,6 +232,7 @@ const tasksController = {
               {
                 model: db.user,
                 as: "assigned_users",
+                attributes: ["id", "pseudo", "firstname", "lastname", "email"],
               },
             ],
           },
@@ -262,9 +263,10 @@ const tasksController = {
       }
 
       await task.objective.addAssigned_users(user);
-      res
-        .status(200)
-        .send({ message: "Utilisateur assigné à la tache avec succès." });
+      res.status(200).send({
+        message: "Utilisateur assigné à la tache avec succès.",
+        data: task,
+      });
     } catch (error) {
       console.error(error);
       res

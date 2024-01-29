@@ -33,7 +33,7 @@ const generateTokensAndExpiration = async (user) => {
   const duration = parseInt(expiresIn.slice(0, -1));
 
   let expiresInMillis;
-  switch (unit) {
+  /*switch (unit) {
     case "s":
       expiresInMillis = duration * 1000;
       break;
@@ -46,13 +46,13 @@ const generateTokensAndExpiration = async (user) => {
     // Ajoutez d'autres cas selon vos besoins (j, d, etc.)
     default:
       throw new Error("Invalid time unit in JWT_EXPIRED_IN");
-  }
-
+  }*/
+  const refreshTokenExp = jwt.decode(refreshToken).exp;
   const accessTokenExpiration = Math.floor(
     (Date.now() + expiresInMillis) / 1000
   );
 
-  return { accessToken, refreshToken, accessTokenExpiration };
+  return { accessToken, refreshToken, accessTokenExpiration, refreshTokenExp };
 };
 
 const authController = (models) => ({

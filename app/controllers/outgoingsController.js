@@ -263,6 +263,7 @@ const outgoingsController = {
               {
                 model: db.user,
                 as: "assigned_users",
+                attributes: ["id", "pseudo", "firstname", "lastname", "email"],
               },
             ],
           },
@@ -288,9 +289,10 @@ const outgoingsController = {
       }
 
       await outgoing.objective.addAssigned_users(user);
-      res
-        .status(200)
-        .send({ data: "Utilisateur assigné à la dépense avec succès." });
+      res.status(200).send({
+        message: "Utilisateur assigné à la dépense avec succès.",
+        data: outgoing,
+      });
     } catch (error) {
       console.error(error);
       res
