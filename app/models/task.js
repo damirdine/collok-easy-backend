@@ -9,14 +9,12 @@ export default (sequelize, Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      createdAt: {
-        field: "created_at",
+      created_at: {
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
       },
-      updatedAt: {
-        field: "updated_at",
+      updated_at: {
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
@@ -32,6 +30,9 @@ export default (sequelize, Sequelize) => {
     },
     {
       tableName: "task",
+      underscored: true,
+      createdAt: "created_at",
+      updatedAt: "updated_at",
     }
   );
   task.associate = (models) => {
