@@ -8,13 +8,13 @@ export default (sequelize, Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      createdAt: {
+      created_at: {
         field: "created_at",
         type: DataTypes.DATE,
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
       },
-      updatedAt: {
+      updated_at: {
         field: "updated_at",
         type: DataTypes.DATE,
         defaultValue: Sequelize.fn("NOW"),
@@ -62,6 +62,9 @@ export default (sequelize, Sequelize) => {
     },
     {
       tableName: "user",
+      // underscored: true,
+      createdAt: "created_at",
+      updatedAt: "updated_at",
     }
   );
 
