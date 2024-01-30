@@ -15,6 +15,7 @@ Clonez le dépôt du projet à partir de la source :
 ```bash
 git clone <repository-url>
 cd <project-folder>
+cd app
 ```
 
 ### 2. Installer les dépendances
