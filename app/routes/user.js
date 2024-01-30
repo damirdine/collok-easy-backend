@@ -118,8 +118,8 @@ export default userRouter;
  *                  phone: "9876543210"
  *                  username: "henri"
  *                  avatar: "http://url/images.jpg"
- *                  createdAt: "1990-01-01"
- *                  updatedAt: "1990-01-01"
+ *                  created_at: "1990-01-01"
+ *                  updated_at: "1990-01-01"
  *       401:
  *         description: Unauthorized
  *         content:

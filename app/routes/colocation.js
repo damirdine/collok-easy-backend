@@ -92,8 +92,8 @@ export default colocationRouter;
  *             example:
  *               data:
  *                 - id: 1
- *                   createdAt: "2023-12-21T09:38:19.000Z"
- *                   updatedAt: "2023-12-21T09:38:19.000Z"
+ *                   created_at: "2023-12-21T09:38:19.000Z"
+ *                   updated_at: "2023-12-21T09:38:19.000Z"
  *                   name: "Colocation 1"
  *                   admin_user_id: 1
  *                   admin_user:
@@ -102,8 +102,8 @@ export default colocationRouter;
  *                     lastname: "Lastname1"
  *                     pseudo: "Pseudo1"
  *                 - id: 2
- *                   createdAt: "2023-12-21T09:38:19.000Z"
- *                   updatedAt: "2023-12-21T09:38:19.000Z"
+ *                   created_at: "2023-12-21T09:38:19.000Z"
+ *                   updated_at: "2023-12-21T09:38:19.000Z"
  *                   name: "Colocation 2"
  *                   admin_user_id: 6
  *                   admin_user:
@@ -145,8 +145,8 @@ export default colocationRouter;
  *             example:
  *               data: {
  *                 "id": 8,
- *                 "createdAt": "2023-12-21T10:09:45.000Z",
- *                 "updatedAt": "2023-12-21T10:09:45.000Z",
+ *                 "created_at": "2023-12-21T10:09:45.000Z",
+ *                 "updated_at": "2023-12-21T10:09:45.000Z",
  *                 "name": "My Colocation bis encore plus",
  *                 "admin_user_id": 8
  *               }
@@ -193,8 +193,8 @@ export default colocationRouter;
  *             example:
  *               data: {
  *                 "id": 8,
- *                 "createdAt": "2023-12-21T10:09:45.000Z",
- *                 "updatedAt": "2023-12-21T10:09:45.000Z",
+ *                 "created_at": "2023-12-21T10:09:45.000Z",
+ *                 "updated_at": "2023-12-21T10:09:45.000Z",
  *                 "name": "My Colocation bis encore plus",
  *                 "admin_user_id": 8
  *               }
@@ -248,8 +248,8 @@ export default colocationRouter;
  *             example:
  *               data: {
  *                 "id": 5,
- *                 "createdAt": "2023-12-21T09:38:19.000Z",
- *                 "updatedAt": "2023-12-21T09:38:19.000Z",
+ *                 "created_at": "2023-12-21T09:38:19.000Z",
+ *                 "updated_at": "2023-12-21T09:38:19.000Z",
  *                 "name": "New Colocation Name",
  *                 "admin_user_id": 8
  *               }
@@ -340,8 +340,8 @@ export default colocationRouter;
  *             example:
  *               data:
  *                 id: 2
- *                 createdAt: "2023-12-21T09:38:19.000Z"
- *                 updatedAt: "2023-12-21T12:43:11.000Z"
+ *                 created_at: "2023-12-21T09:38:19.000Z"
+ *                 updated_at: "2023-12-21T12:43:11.000Z"
  *                 firstname: "User2"
  *                 lastname: "Lastname2"
  *                 email: "user2@example.com"
@@ -397,8 +397,8 @@ export default colocationRouter;
  *             example:
  *               data: {
  *                 "id": 8,
- *                 "createdAt": "2023-12-21T10:09:45.000Z",
- *                 "updatedAt": "2023-12-21T10:09:45.000Z",
+ *                 "created_at": "2023-12-21T10:09:45.000Z",
+ *                 "updated_at": "2023-12-21T10:09:45.000Z",
  *                 "name": "My Colocation bis encore plus",
  *                 "admin_user_id": 8
  *               }
@@ -453,8 +453,8 @@ export default colocationRouter;
  *             example:
  *               data: {
  *                 "id": 3,
- *                 "createdAt": "2023-12-21T09:38:19.000Z",
- *                 "updatedAt": "2023-12-21T09:38:19.000Z",
+ *                 "created_at": "2023-12-21T09:38:19.000Z",
+ *                 "updated_at": "2023-12-21T09:38:19.000Z",
  *                 "firstname": "User3",
  *                 "lastname": "Lastname3",
  *                 "email": "user3@example.com",
@@ -561,8 +561,8 @@ export default colocationRouter;
  *               data: [
  *                 {
  *                   "id": 1,
- *                   "createdAt": "2023-12-21T09:38:19.000Z",
- *                   "updatedAt": "2023-12-21T09:38:19.000Z",
+ *                   "created_at": "2023-12-21T09:38:19.000Z",
+ *                   "updated_at": "2023-12-21T09:38:19.000Z",
  *                   "firstname": "User1",
  *                   "lastname": "Lastname1",
  *                   "email": "user1@example.com",
@@ -575,8 +575,8 @@ export default colocationRouter;
  *                 },
  *                 {
  *                   "id": 2,
- *                   "createdAt": "2023-12-21T09:38:19.000Z",
- *                   "updatedAt": "2023-12-21T09:38:19.000Z",
+ *                   "created_at": "2023-12-21T09:38:19.000Z",
+ *                   "updated_at": "2023-12-21T09:38:19.000Z",
  *                   "firstname": "User2",
  *                   "lastname": "Lastname2",
  *                   "email": "user2@example.com",

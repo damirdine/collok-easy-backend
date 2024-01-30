@@ -73,14 +73,14 @@ taskRouter.delete(
  *               data: [
  *                 {
  *                   "id": 2,
- *                   "createdAt": "2023-12-22T13:51:50.000Z",
- *                   "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                   "created_at": "2023-12-22T13:51:50.000Z",
+ *                   "updated_at": "2023-12-22T13:51:50.000Z",
  *                   "estimated_duration": 1,
  *                   "objective_id": 7,
  *                   "objective": {
  *                     "id": 7,
- *                     "createdAt": "2023-12-22T13:51:50.000Z",
- *                     "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                     "created_at": "2023-12-22T13:51:50.000Z",
+ *                     "updated_at": "2023-12-22T13:51:50.000Z",
  *                     "name": "Objective 7",
  *                     "description": null,
  *                     "deadline": null,
@@ -91,14 +91,14 @@ taskRouter.delete(
  *                 },
  *                 {
  *                   "id": 4,
- *                   "createdAt": "2023-12-22T13:51:50.000Z",
- *                   "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                   "created_at": "2023-12-22T13:51:50.000Z",
+ *                   "updated_at": "2023-12-22T13:51:50.000Z",
  *                   "estimated_duration": 2,
  *                   "objective_id": 9,
  *                   "objective": {
  *                     "id": 9,
- *                     "createdAt": "2023-12-22T13:51:50.000Z",
- *                     "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                     "created_at": "2023-12-22T13:51:50.000Z",
+ *                     "updated_at": "2023-12-22T13:51:50.000Z",
  *                     "name": "Objective 9",
  *                     "description": null,
  *                     "deadline": null,
@@ -153,8 +153,8 @@ taskRouter.delete(
  *             example:
  *               data: {
  *                 "id": 2,
- *                 "createdAt": "2023-12-22T13:51:50.000Z",
- *                 "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                 "created_at": "2023-12-22T13:51:50.000Z",
+ *                 "updated_at": "2023-12-22T13:51:50.000Z",
  *                 "estimated_duration": 1,
  *                 "objective_id": 7,
  *                 "objective": {
@@ -367,14 +367,14 @@ taskRouter.delete(
  *               message: "Tâche mise à jour avec succès."
  *               data:
  *                 id: 4
- *                 createdAt: "2023-12-21T09:56:07.000Z"
- *                 updatedAt: "2023-12-22T08:41:14.000Z"
+ *                 created_at: "2023-12-21T09:56:07.000Z"
+ *                 updated_at: "2023-12-22T08:41:14.000Z"
  *                 estimated_duration: 10
  *                 objective_id: 9
  *                 objective:
  *                   id: 9
- *                   createdAt: "2023-12-21T09:56:07.000Z"
- *                   updatedAt: "2023-12-22T08:41:14.000Z"
+ *                   created_at: "2023-12-21T09:56:07.000Z"
+ *                   updated_at: "2023-12-22T08:41:14.000Z"
  *                   name: "salle de bain"
  *                   deadline: "2023-10-12T15:00:00.000Z"
  *                   is_completed: true
@@ -432,6 +432,33 @@ taskRouter.delete(
  *           application/json:
  *             example:
  *               message: "Utilisateur assigné à la tache avec succès."
+ *               data:
+ *                 id: 1
+ *                 created_at: "2024-01-12T15:11:04.000Z"
+ *                 updated_at: "2024-01-12T15:11:04.000Z"
+ *                 estimated_duration: 2
+ *                 objective_id: 6
+ *                 objective:
+ *                   id: 6
+ *                   created_at: "2024-01-12T15:11:04.000Z"
+ *                   updated_at: "2024-01-12T15:11:04.000Z"
+ *                   name: "Objective 6"
+ *                   description: null
+ *                   deadline: null
+ *                   colocation_id: 2
+ *                   created_by: 6
+ *                   is_completed: false
+ *                   assigned_users:
+ *                     - id: 6
+ *                       pseudo: null
+ *                       firstname: "User6"
+ *                       lastname: "Lastname6"
+ *                       email: "user6@example.com"
+ *                       user_objective:
+ *                         created_at: "2024-01-29T09:53:46.000Z"
+ *                         updated_at: "2024-01-29T09:53:46.000Z"
+ *                         objective_id: 6
+ *                         user_id: 6
  *       404:
  *         description: Task not found or user does not belong to the colocation
  *         content:

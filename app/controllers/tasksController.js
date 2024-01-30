@@ -81,6 +81,7 @@ const tasksController = {
       // Destructure task details from request body
       const { name, description, deadline, estimated_duration } = req.body;
       // Create a new objective in the colocation
+      console.log(req.body);
       const newObjective = await db.objective.create({
         name,
         description,
@@ -89,7 +90,6 @@ const tasksController = {
         created_by: userId,
         is_completed: false, // default value at creation
       });
-
       // Create a task associated with the new objective
       const newTask = await db.task.create({
         estimated_duration,
@@ -265,7 +265,7 @@ const tasksController = {
       await task.objective.addAssigned_users(user);
       res.status(200).send({
         message: "Utilisateur assigné à la tache avec succès.",
-        data: task,
+        data: await task.reload(),
       });
     } catch (error) {
       console.error(error);
