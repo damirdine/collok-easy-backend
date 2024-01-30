@@ -52,7 +52,10 @@ const userController = {
       const { password, ...body } = req.body;
       await user.update({ ...body, updateAt: new Date() });
 
-      res.json({ message: msg.success_profile_update, data: user.toJSON() });
+      res.json({
+        message: msg.success_profile_update,
+        data: await user.reload(),
+      });
     } catch (error) {
       return handleRequestExeption(error, req);
     }
