@@ -57,14 +57,14 @@ outgoingRouter.delete(
  *               data: [
  *                 {
  *                   "id": 1,
- *                   "createdAt": "2023-12-22T13:51:50.000Z",
- *                   "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                   "created_at": "2023-12-22T13:51:50.000Z",
+ *                   "updated_at": "2023-12-22T13:51:50.000Z",
  *                   "final_expense": 5416,
  *                   "objective_id": 1,
  *                   "objective": {
  *                     "id": 1,
- *                     "createdAt": "2023-12-22T13:51:50.000Z",
- *                     "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                     "created_at": "2023-12-22T13:51:50.000Z",
+ *                     "updated_at": "2023-12-22T13:51:50.000Z",
  *                     "name": "Objective 1",
  *                     "description": null,
  *                     "deadline": null,
@@ -75,14 +75,14 @@ outgoingRouter.delete(
  *                 },
  *                 {
  *                   "id": 3,
- *                   "createdAt": "2023-12-22T13:51:50.000Z",
- *                   "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                   "created_at": "2023-12-22T13:51:50.000Z",
+ *                   "updated_at": "2023-12-22T13:51:50.000Z",
  *                   "final_expense": 1916,
  *                   "objective_id": 3,
  *                   "objective": {
  *                     "id": 3,
- *                     "createdAt": "2023-12-22T13:51:50.000Z",
- *                     "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                     "created_at": "2023-12-22T13:51:50.000Z",
+ *                     "updated_at": "2023-12-22T13:51:50.000Z",
  *                     "name": "Objective 3",
  *                     "description": null,
  *                     "deadline": null,
@@ -137,8 +137,8 @@ outgoingRouter.delete(
  *             example:
  *               data:
  *                 id: 7
- *                 createdAt: "2023-12-22T14:20:10.000Z"
- *                 updatedAt: "2023-12-22T14:20:10.000Z"
+ *                 created_at: "2023-12-22T14:20:10.000Z"
+ *                 updated_at: "2023-12-22T14:20:10.000Z"
  *                 final_expense: 12003
  *                 objective_id: 20
  *                 objective:
@@ -344,14 +344,14 @@ outgoingRouter.delete(
  *               message: "Dépense mise à jour avec succès."
  *               data:
  *                 id: 27
- *                 createdAt: "2024-01-12T10:42:11.000Z"
- *                 updatedAt: "2024-01-12T11:11:49.000Z"
+ *                 created_at: "2024-01-12T10:42:11.000Z"
+ *                 updated_at: "2024-01-12T11:11:49.000Z"
  *                 final_expense: 2897
  *                 objective_id: 52
  *                 objective:
  *                   id: 52
- *                   createdAt: "2024-01-12T10:42:11.000Z"
- *                   updatedAt: "2024-01-12T11:11:49.000Z"
+ *                   created_at: "2024-01-12T10:42:11.000Z"
+ *                   updated_at: "2024-01-12T11:11:49.000Z"
  *                   name: "facture eau"
  *                   description: "facture de mois de janvier"
  *                   deadline: "2023-01-05T15:30:00.000Z"
@@ -418,6 +418,33 @@ outgoingRouter.delete(
  *           application/json:
  *             example:
  *               message: "Utilisateur assigné à la dépense avec succès."
+ *               data:
+ *                 id: 1
+ *                 created_at: "2024-01-12T15:11:04.000Z"
+ *                 updated_at: "2024-01-12T15:11:04.000Z"
+ *                 final_expense: 2002
+ *                 objective_id: 6
+ *                 objective:
+ *                   id: 6
+ *                   created_at: "2024-01-12T15:11:04.000Z"
+ *                   updated_at: "2024-01-12T15:11:04.000Z"
+ *                   name: "Objective 6"
+ *                   description: null
+ *                   deadline: null
+ *                   colocation_id: 2
+ *                   created_by: 6
+ *                   is_completed: false
+ *                   assigned_users:
+ *                     - id: 6
+ *                       pseudo: null
+ *                       firstname: "User6"
+ *                       lastname: "Lastname6"
+ *                       email: "user6@example.com"
+ *                       user_objective:
+ *                         created_at: "2024-01-29T09:53:46.000Z"
+ *                         updated_at: "2024-01-29T09:53:46.000Z"
+ *                         objective_id: 6
+ *                         user_id: 12
  *       404:
  *         description: Outgoing not found or user does not belong to the colocation
  *         content:

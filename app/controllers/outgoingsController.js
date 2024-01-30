@@ -106,7 +106,6 @@ const outgoingsController = {
         created_by: userId,
         is_completed: false,
       });
-
       const newOutgoing = await db.outgoing.create({
         final_expense,
         objective_id: newObjective.id,
@@ -291,7 +290,7 @@ const outgoingsController = {
       await outgoing.objective.addAssigned_users(user);
       res.status(200).send({
         message: "Utilisateur assigné à la dépense avec succès.",
-        data: outgoing,
+        data: await outgoing.reload(),
       });
     } catch (error) {
       console.error(error);

@@ -22,7 +22,7 @@ describe("Tasks Controller", () => {
 
   test("should get tasks by colocation", async () => {
     const response = await request(server)
-      .get(API_BASE_URL + "/colocation/2/tasks")
+      .get(API_BASE_URL + "/colocation/1/tasks")
       .set("Authorization", `Bearer ${authToken}`)
       .expect("Content-Type", /json/)
       .expect(200);
@@ -33,7 +33,7 @@ describe("Tasks Controller", () => {
 
   test("should add a new task", async () => {
     const response = await request(server)
-      .post(API_BASE_URL + "/colocation/2/tasks")
+      .post(API_BASE_URL + "/colocation/1/tasks")
       .send({
         name: "New Task",
         description: "Task description",
