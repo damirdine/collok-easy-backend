@@ -9,7 +9,7 @@ export default function handleValidationErrors(req, res, next) {
   next();
 }
 export function handleUserColocationAccess(req, res, next) {
-  let colocationId = req.param?.colocationId;
+  let colocationId = req.params?.colocationID || req.params?.colocationId;
   if (!colocationId) {
     const urlPattern = /\/colocation\/(\w+)\//;
     const match = req.originalUrl.match(urlPattern);
@@ -17,7 +17,7 @@ export function handleUserColocationAccess(req, res, next) {
   }
   const userColocationId = req.user.colocation_id;
 
-  if (colocationId !== userColocationId) {
+  if (colocationId != userColocationId) {
     return res.status(403).json({ error: error(req).colocation_access_denied });
   }
   next();
