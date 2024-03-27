@@ -8,6 +8,7 @@ export default function handleValidationErrors(req, res, next) {
   }
   next();
 }
+
 export function handleUserColocationAccess(req, res, next) {
   let colocationId = req.params?.colocationID || req.params?.colocationId;
   if (!colocationId) {

@@ -54,7 +54,7 @@ const userController = {
 
       res.json({
         message: msg.success_profile_update,
-        data: await user.reload(),
+        data: user,
       });
     } catch (error) {
       return handleRequestExeption(error, req);
