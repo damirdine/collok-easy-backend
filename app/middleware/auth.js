@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import { JWT_SECRET_KEY } from "../helpers/constant.js";
+import models from "../models/index.js";
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   const tokenHeader = req.header("Authorization");
   const token = tokenHeader?.split("Bearer ")[1];
 
@@ -9,7 +10,7 @@ const authMiddleware = (req, res, next) => {
     return res.status(401).json({ error: "Unauthorized - Token not provided" });
   }
 
-  jwt.verify(token, JWT_SECRET_KEY, (err, user) => {
+  jwt.verify(token, JWT_SECRET_KEY, async (err, user) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
         return res.status(401).json({ error: "Unauthorized - Token expired" });
@@ -27,8 +28,12 @@ const authMiddleware = (req, res, next) => {
 
       return res.status(200).json({ token: newToken });
     }
-
-    req.user = user;
+    const userDb = (
+      await models.user.findByPk(user.id, {
+        attributes: { exclude: ["password"] },
+      })
+    ).toJSON();
+    req.user = userDb;
     next();
   });
 };
