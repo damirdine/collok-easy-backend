@@ -1,20 +1,20 @@
 version: "3"
 services:
-  api-express:
-    container_name: api
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    volumes:
-      - .:/usr/src/app # Use a dot instead of type: bind for better readability
-      - /usr/src/app/node_modules
-    depends_on:
-      - db
-    command: npm run dev
+  # api-express:
+  #   container_name: api
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3001"
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/usr/src/app # Use a dot instead of type: bind for better readability
+  #     - /usr/src/app/node_modules
+  #   depends_on:
+  #     - db
+  #   command: npm run dev
 
   db:
     image: mysql
